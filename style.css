@@ -1,0 +1,542 @@
+:root {
+    --bg-light: linear-gradient(45deg, #ffd700, #ffeb3b);
+    --bg-dark: linear-gradient(45deg, #2c2c2c, #1a1a1a);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', 'Arial', sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: linear-gradient(45deg, #ffd700, #ffeb3b);
+}
+
+body.dark-theme {
+    background: linear-gradient(45deg, #2c2c2c, #1a1a1a);
+}
+
+.login-container {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 420px;
+    backdrop-filter: blur(10px);
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    margin-bottom: 40px;
+    font-size: 28px;
+    font-weight: 600;
+    position: relative;
+}
+
+h2:after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: #ffd700;
+}
+
+.input-group {
+    position: relative;
+    margin-bottom: 35px;
+}
+
+input {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    outline: none;
+    font-size: 16px;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+}
+
+input:focus {
+    border-color: #ffd700;
+    box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+}
+
+label {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    color: #999;
+    transition: 0.3s;
+    pointer-events: none;
+    font-size: 16px;
+}
+
+input:focus ~ label,
+input:valid ~ label {
+    top: -12px;
+    right: 10px;
+    color: #ffd700;
+    font-size: 14px;
+    font-weight: 600;
+    background: white;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    background: #ffd700;
+    color: #333;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(255,215,0,0.3);
+}
+
+button:hover {
+    background: #ffeb3b;
+    transform: translateY(-2px);
+}
+
+button:active {
+    transform: translateY(0);
+}
+
+#error-message {
+    color: #ff5252;
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.result-message {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.result-message.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.result-message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.error {
+    animation: shake 0.3s ease-in-out;
+}
+
+/* إضافة هذه القواعد في نهاية الملف */
+@media screen and (max-width: 480px) {
+    .login-container {
+        width: 90%;
+        padding: 30px 20px;
+        margin: 20px;
+        border-radius: 15px;
+    }
+
+    h2 {
+        font-size: 24px;
+        margin-bottom: 30px;
+    }
+
+    input {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    label {
+        font-size: 14px;
+    }
+
+    button {
+        padding: 12px;
+        font-size: 15px;
+    }
+}
+
+@media screen and (max-height: 600px) {
+    .login-container {
+        margin: 10px 0;
+    }
+
+    .input-group {
+        margin-bottom: 25px;
+    }
+}
+
+@media screen and (max-width: 320px) {
+    .login-container {
+        padding: 20px 15px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+
+    input {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    label {
+        font-size: 13px;
+    }
+}
+
+/* أنماط زر تبديل النمط */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+}
+
+.theme-toggle button {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid #ffd700;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.theme-toggle i {
+    font-size: 20px;
+    color: #333;
+}
+
+/* أنماط النمط الداكن */
+body.dark-theme {
+    background: linear-gradient(45deg, #2c2c2c, #1a1a1a);
+}
+
+body.dark-theme .login-container {
+    background: rgba(40, 40, 40, 0.95);
+}
+
+body.dark-theme h2,
+body.dark-theme label {
+    color: #fff;
+}
+
+body.dark-theme input {
+    background: rgba(60, 60, 60, 0.9);
+    border-color: #444;
+    color: #fff;
+}
+
+body.dark-theme input:focus ~ label,
+body.dark-theme input:valid ~ label {
+    background: #282828;
+    color: #ffd700;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.register-link a {
+    color: #ffd700;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.3s;
+}
+
+.register-link a:hover {
+    color: #ffeb3b;
+    text-decoration: underline;
+}
+
+/* إضافة نمط للرابط في الوضع الداكن */
+body.dark-theme .register-link {
+    border-top-color: rgba(255,255,255,0.1);
+}
+
+body.dark-theme .register-link a {
+    color: #ffd700;
+}
+
+body.dark-theme .register-link a:hover {
+    color: #ffeb3b;
+}
+
+/* ستايل الطبقة الخافتة */
+.overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2000;
+    animation: fadeIn 0.7s;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.overlay-content {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    min-width: 260px;
+    text-align: center;
+    opacity: 0;
+    animation: popIn 0.7s forwards;
+}
+
+@keyframes popIn {
+    0% { opacity: 0; transform: scale(0.8);}
+    100% { opacity: 1; transform: scale(1);}
+}
+
+.options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    margin-top: 25px;
+    justify-content: flex-start;
+    align-items: stretch;
+    max-height: 320px;
+    overflow-y: auto;
+    padding: 0 8px;
+}
+
+.option-box {
+    background: #ffd700;
+    color: #333;
+    border-radius: 12px;
+    padding: 30px 22px;
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(255,215,0,0.12);
+    transition: 0.2s;
+    min-width: 80px;
+}
+
+.option-box:hover {
+    background: #ffeb3b;
+    transform: scale(1.08);
+}
+
+/* قائمة اللغات المنسدلة */
+.lang-dropdown {
+    position: absolute;
+    top: 55px;
+    left: 75px;
+    background: #fff;
+    border: 1px solid #ffd700;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+    min-width: 120px;
+    z-index: 1100;
+    display: flex;
+    flex-direction: column;
+    animation: dropdownFade 0.3s;
+}
+
+@keyframes dropdownFade {
+    from { opacity: 0; transform: translateY(-10px);}
+    to { opacity: 1; transform: translateY(0);}
+}
+
+.lang-option {
+    padding: 12px 18px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #333;
+    transition: background 0.2s;
+}
+
+.lang-option:hover {
+    background: #ffd700;
+    color: #222;
+}
+
+/* تأثير سحب الفورم للأعلى */
+.slide-up {
+    animation: slideUp 0.7s forwards;
+}
+
+@keyframes slideUp {
+    0% { transform: translateY(0); opacity: 1;}
+    80% { opacity: 0.3;}
+    100% { transform: translateY(-120px); opacity: 0;}
+}
+
+.confirm-user {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.confirm-user button {
+    min-width: 80px;
+    font-weight: 600;
+    margin: 0 5px;
+    transition: 0.2s;
+}
+
+#confirmYes {
+    background: #28a745;
+    color: #fff;
+}
+
+#confirmNo {
+    background: #dc3545;
+    color: #fff;
+}
+
+.user-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    align-items: stretch;
+}
+
+.action-btn {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    background: #fff;
+    border: 2px solid #ffd700;
+    border-radius: 12px;
+    padding: 18px 22px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(255,215,0,0.08);
+    transition: background 0.2s, transform 0.2s;
+}
+
+.action-btn:hover {
+    background: #fffbe6;
+    transform: scale(1.04);
+}
+
+.action-btn i {
+    font-size: 22px;
+    opacity: 0.8;
+}
+
+/* Responsive styles for create-request cards */
+@media (max-width: 600px) {
+    #items-container {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 16px !important;
+        margin-top: 18px !important;
+    }
+    .item-card {
+        width: 90vw !important;
+        min-width: 0 !important;
+        padding: 14px !important;
+    }
+}
+
+/* صف العناصر حسب النوع */
+.items-row {
+    width: 100%;
+    min-height: 180px;
+    height: 200px;
+    display: flex;
+    flex-direction: row;
+    gap: 18px;
+    overflow-x: auto;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 8px;
+    scrollbar-width: thin;
+    scrollbar-color: #ffd700 #eee;
+}
+
+.items-row::-webkit-scrollbar {
+    height: 8px;
+    background: #eee;
+}
+.items-row::-webkit-scrollbar-thumb {
+    background: #ffd700;
+    border-radius: 6px;
+}
+
+/* عنوان نوع العنصر */
+.item-type-title {
+    font-weight: 700;
+    font-size: 20px;
+    margin-bottom: 8px;
+    margin-right: 8px;
+    color: #333;
+}
+
+/* Responsive صفوف العناصر */
+@media (max-width: 600px) {
+    .items-row {
+        height: 160px;
+        gap: 12px;
+    }
+    .item-type-title {
+        font-size: 17px;
+        margin-bottom: 4px;
+    }
+    .item-card {
+        width: 140px !important;
+        padding: 10px !important;
+    }
+}
+
+#items-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}

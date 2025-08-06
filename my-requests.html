@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>طلباتي المستلمة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+      window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrdnloc21vYmFsYnFmY2p1cGRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4OTc4MzksImV4cCI6MjA2NzQ3MzgzOX0.aYKPcM2sPZLsVmQLOvsI454RSVlIzNMK24sv_QHHErQ';
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="my-requests.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            background: #f9f6e7;
+            min-height: 100vh;
+        }
+        .requests-container {
+            margin: 40px auto;
+            max-width: 700px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+            padding: 32px 24px;
+            text-align: center;
+        }
+        .request-card {
+            border:1px solid #ccc;
+            border-radius:12px;
+            padding:18px 8px;
+            background:#fff;
+            box-shadow:0 2px 8px rgba(0,0,0,0.07);
+            text-align:right;
+            margin-bottom: 18px;
+            transition:box-shadow 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .request-header {
+            font-weight:700;
+            font-size:18px;
+            margin-bottom:6px;
+            color:#222;
+        }
+        .request-status {
+            font-size:15px;
+            font-weight:600;
+            padding:4px 12px;
+            border-radius:12px;
+            display:inline-block;
+            margin-bottom:6px;
+        }
+        .status-new { background:#ffd700; color:#222; }
+        .status-in_progress { background:#35e549ff; color:#fff; }
+        .status-done { background:#4caf50; color:#fff; }
+        .status-rejected { background:#e53935; color:#fff; }
+        .request-items-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px; /* زيادة المسافة بين العناصر */
+            margin-bottom: 12px; /* زيادة المسافة أسفل العناصر */
+        }
+        .request-item {
+            background: #f9f6e7;
+            border-radius: 12px; /* زيادة الاستدارة */
+            padding: 14px 18px; /* زيادة الحشو */
+            display: flex;
+            align-items: center;
+            gap: 12px; /* زيادة المسافة بين الصورة والنص */
+            min-width: 180px; /* زيادة عرض الكارد */
+            box-shadow: 0 2px 8px rgba(0,0,0,0.10); /* إضافة ظل خفيف */
+            font-size: 17px; /* تكبير الخط */
+        }
+        .request-item img {
+            width: 72px; /* تكبير الصورة أكثر */
+            height: 72px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #ccc;
+        }
+        .request-location-img {
+            width: 56px !important; /* تكبير الصورة */
+            height: 56px !important;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid #ccc;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        .request-footer {
+            font-size:13px;
+            color:#888;
+            margin-top: 4px;
+        }
+        /* Dark theme styles */
+        body.dark-theme { background: #222 !important; color: #eee !important; }
+        body.dark-theme .requests-container, body.dark-theme .request-card { background: #333 !important; color: #fff !important; border-color: #555 !important; }
+        body.dark-theme .request-header { color: #ffd700 !important; }
+        body.dark-theme .request-item { background: #222 !important; color: #ffd700 !important; }
+    </style>
+</head>
+<body>
+    <div class="requests-container">
+        <h2 style="margin-bottom:24px; font-size:22px; font-weight:700;">الطلبات المستلمة</h2>
+        <div id="requests-list"></div>
+    </div>
+</body>
+</html>

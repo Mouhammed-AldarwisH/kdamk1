@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Request</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <script>
+  window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrdnloc21vYmFsYnFmY2p1cGRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4OTc4MzksImV4cCI6MjA2NzQ3MzgzOX0.aYKPcM2sPZLsVmQLOvsI454RSVlIzNMK24sv_QHHErQ';
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="create-request.js" defer></script>
+
+    <script>
+        // // Redirect to login.html if house/user not selected
+        // document.addEventListener('DOMContentLoaded', function() {
+        //     const houseId = localStorage.getItem('selectedHouseId');
+        //     const userId = localStorage.getItem('selectedUserId');
+        //     if (!houseId || !userId) {
+        //         window.location.href = "login.html";
+        //     }
+        // });
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        /* تطبيق النمط الداكن */
+        body.dark-theme {
+            background-color: #222 !important;
+            color: #eee !important;
+        }
+        
+        body.dark-theme .item-card {
+            background-color: #333 !important;
+            color: #fff !important;
+            border-color: #555 !important;
+        }
+        
+        body.dark-theme .item-type-title {
+            color: #fff !important;
+        }
+        
+        body.dark-theme .lang-dropdown {
+            background-color: #333 !important;
+            color: #fff !important;
+            border-color: #555 !important;
+        }
+        
+        body.dark-theme .lang-option {
+            color: #fff !important;
+        }
+        
+        body.dark-theme .lang-option:hover {
+            background-color: #444 !important;
+        }
+    </style>
+</head>
+<body style="display:flex; justify-content:center; align-items:center; min-height:100vh; background:#f9f6e7;">
+    <!-- أزرار تغيير اللغة والنمط -->
+    <div class="theme-toggle" style="position:fixed;top:24px;left:24px;z-index:10000;">
+        <button id="langButton"><i class="fas fa-globe"></i></button>
+        <button id="themeButton"><i class="fas fa-moon"></i></button>
+        <div id="lang-dropdown" class="lang-dropdown" style="display:none;position:absolute;top:40px;left:0;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);padding:8px 0;">
+            <div class="lang-option" data-lang="ar">العربية</div>
+            <div class="lang-option" data-lang="en">English</div>
+            <div class="lang-option" data-lang="ph">Filipino</div>
+        </div>
+    </div>
+    <input type="hidden" id="currentLang" value="ar">
+    <!-- Card container for items -->
+    <div id="items-container" style="margin-top:30px; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%;">
+        <!-- Cards will be rendered here by JS -->
+    </div>
+    <script src="create-request.js"></script>
+</body>
+</html>
+

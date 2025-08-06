@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>رفع صورة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+      window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrdnloc21vYmFsYnFmY2p1cGRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4OTc4MzksImV4cCI6MjA2NzQ3MzgzOX0.aYKPcM2sPZLsVmQLOvsI454RSVlIzNMK24sv_QHHErQ';
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="upload-image.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: #f9f6e7;
+            min-height: 100vh;
+        }
+        .upload-container {
+            margin: 40px auto;
+            max-width: 500px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+            padding: 32px 24px;
+            text-align: center;
+            position: relative;
+        }
+        .upload-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+        .select-type-btn {
+            margin: 0 8px 12px 8px;
+            padding: 8px 18px;
+            border-radius: 18px;
+            border: none;
+            background: #eee;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .item-card, .location-card {
+            border:1px solid #ccc;
+            border-radius:12px;
+            padding:18px 8px;
+            background:#fff;
+            box-shadow:0 2px 8px rgba(0,0,0,0.07);
+            text-align:center;
+            cursor:pointer;
+            margin-bottom: 12px;
+            transition:box-shadow 0.2s;
+        }
+        .selected {
+            box-shadow: 0 0 0 3px #35e549ff;
+        }
+        .upload-btn {
+            background: #ffd700;
+            color: #222;
+            font-weight: 700;
+            font-size: 18px;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 24px;
+            cursor: pointer;
+            margin-top: 18px;
+        }
+        .success-msg {
+            color: #35e549ff;
+            font-size: 18px;
+            margin-top: 18px;
+        }
+        .error-msg {
+            color: #e53935;
+            font-size: 16px;
+            margin-top: 18px;
+        }
+        /* Styles for dark theme */
+        .dark-theme {
+            background: #222;
+            color: #fff;
+        }
+        .dark-theme .upload-container, .dark-theme .item-card, .dark-theme .location-card {
+            background: #333;
+            border-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- أزرار تغيير اللغة والنمط -->
+    <div class="theme-toggle" style="position:fixed;top:24px;left:24px;z-index:10000;">
+        <button id="langButton"><i class="fas fa-globe"></i></button>
+        <button id="themeButton"><i class="fas fa-moon"></i></button>
+        <div id="lang-dropdown" class="lang-dropdown" style="display:none;position:absolute;top:40px;left:0;background:#fff;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,0.08);padding:8px 0;">
+            <div class="lang-option" data-lang="ar">العربية</div>
+            <div class="lang-option" data-lang="en">English</div>
+            <div class="lang-option" data-lang="ph">Filipino</div>
+        </div>
+    </div>
+    <input type="hidden" id="currentLang" value="ar">
+    <div class="upload-container">
+        <!-- زر الرجوع بالسهم -->
+        <button id="backArrowBtn" style="display:none; position:absolute; top:-39px; left:263px; background:khaki; border:none; font-size:22px; color:#222; cursor:pointer; padding:2px 10px; width:20%;" title="رجوع">&#8594;</button>
+        <div class="upload-title">رفع صورة لغرض أو مكان توصيل</div>
+        <div id="type-select">
+            <button class="select-type-btn" data-type="item">غرض</button>
+            <button class="select-type-btn" data-type="location">مكان توصيل</button>
+        </div>
+        <div id="list-container"></div>
+        <!-- كارد معاينة الصورة -->
+        <div id="card-preview" style="display:none;"></div>
+        <!-- زر تغيير الصورة -->
+        <button id="changeImageBtn" style="display:none; background:#e53935; color:#fff; font-weight:700; border:none; border-radius:18px; padding:8px 24px; margin-bottom:16px; cursor:pointer;">تغيير الصورة</button>
+        <div id="name-section" style="display:none; margin-bottom:16px;">
+            <input type="text" id="nameInput" style="padding:8px 12px; border-radius:8px; font-size:16px; width:90%;" placeholder="اكتب الاسم هنا">
+        </div>
+        <!-- قائمة اختيار النوع تظهر فقط إذا كان النوع "غرض" وتم اختيار عنصر -->
+        <div id="item-type-section" style="display:none; margin-bottom:16px;">
+            <select id="itemTypeSelect" style="padding:8px 12px; border-radius:8px; font-size:16px;">
+                <option value="">-- اختر النوع --</option>
+                <option value="cups">كاسات</option>
+                <option value="plates">صحون</option>
+                <option value="spices">بهارات</option>
+                <option value="spoons">ملاعق</option>
+                <option value="forks">شوك</option>
+                <option value="food">أكل</option>
+                <option value="drink">مشروبات</option>
+            </select>
+        </div>
+        <div id="upload-section" style="display:none;">
+            <input type="file" id="imageInput" accept="image/*">
+            <button class="upload-btn" id="uploadBtn" style="display:none;">رفع الصورة</button>
+            <div id="uploadMsg"></div>
+        </div>
+    </div>
+    <script>
+      // Helper to check if all required fields are filled
+      function checkFieldsAndToggleUploadBtn() {
+        const nameInput = document.getElementById('nameInput');
+        const itemTypeSelect = document.getElementById('itemTypeSelect');
+        const imageInput = document.getElementById('imageInput');
+        const uploadBtn = document.getElementById('uploadBtn');
+        let showBtn = true;
+
+        // Check if name section is visible and required
+        if (nameInput && nameInput.parentElement.style.display !== 'none') {
+          if (!nameInput.value.trim()) showBtn = false;
+        }
+        // Check if item type section is visible and required
+        if (itemTypeSelect && itemTypeSelect.parentElement.style.display !== 'none') {
+          if (!itemTypeSelect.value) showBtn = false;
+        }
+        // Check if image is selected
+        if (imageInput && imageInput.parentElement.style.display !== 'none') {
+          if (!imageInput.files || imageInput.files.length === 0) showBtn = false;
+        }
+        uploadBtn.style.display = showBtn ? '' : 'none';
+      }
+
+      // ترجمة النصوص
+      const translations = {
+        ar: {
+          uploadTitle: "رفع صورة لغرض أو مكان توصيل",
+          uploadBtn: "رفع الصورة",
+          changeImg: "تغيير الصورة",
+          namePlaceholder: "اكتب الاسم هنا",
+          selectType: "-- اختر النوع --",
+          success: "تم رفع الصورة وإضافة البيانات بنجاح!",
+          error: "حدث خطأ أثناء رفع الصورة.",
+          item: "غرض",
+          location: "مكان توصيل",
+          itemTypes: {
+            cups: "كاسات",
+            plates: "صحون",
+            spices: "بهارات",
+            spoons: "ملاعق",
+            forks: "شوك",
+            food: "أكل",
+            drink: "مشروبات"
+          }
+        },
+        en: {
+          uploadTitle: "Upload an item or location image",
+          uploadBtn: "Upload Image",
+          changeImg: "Change Image",
+          namePlaceholder: "Enter name here",
+          selectType: "-- Select type --",
+          success: "Image uploaded successfully!",
+          error: "Error uploading image.",
+          item: "Item",
+          location: "Delivery Location",
+          itemTypes: {
+            cups: "Cups",
+            plates: "Plates",
+            spices: "Spices",
+            spoons: "Spoons",
+            forks: "Forks",
+            food: "Food",
+            drink: "Drinks"
+          }
+        },
+        ph: {
+          uploadTitle: "Mag-upload ng larawan ng gamit o lokasyon",
+          uploadBtn: "I-upload ang larawan",
+          changeImg: "Palitan ang larawan",
+          namePlaceholder: "Ilagay ang pangalan dito",
+          selectType: "-- Piliin ang uri --",
+          success: "Matagumpay na na-upload ang larawan!",
+          error: "May error sa pag-upload.",
+          item: "Gamit",
+          location: "Lokasyon ng Paghahatid",
+          itemTypes: {
+            cups: "Basong",
+            plates: "Plato",
+            spices: "Pampalasa",
+            spoons: "Kutsara",
+            forks: "Tinidor",
+            food: "Pagkain",
+            drink: "Inumin"
+          }
+        }
+    };
+
+    function applyLang(lang) {
+        document.getElementById('currentLang').value = lang;
+        document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+        document.querySelector('.upload-title').textContent = translations[lang]?.uploadTitle || translations.ar.uploadTitle;
+        document.getElementById('uploadBtn').textContent = translations[lang]?.uploadBtn || translations.ar.uploadBtn;
+        document.getElementById('changeImageBtn').textContent = translations[lang]?.changeImg || translations.ar.changeImg;
+        document.getElementById('nameInput').placeholder = translations[lang]?.namePlaceholder || translations.ar.namePlaceholder;
+        document.getElementById('itemTypeSelect').options[0].text = translations[lang]?.selectType || translations.ar.selectType;
+        // ترجمة أزرار اختيار النوع
+        document.querySelectorAll('.select-type-btn').forEach(btn => {
+          const type = btn.dataset.type;
+          btn.textContent = translations[lang]?.[type] || btn.textContent;
+        });
+        // ترجمة قائمة اختيار النوع
+        const itemTypeSelect = document.getElementById('itemTypeSelect');
+        if (itemTypeSelect) {
+          for (let i = 1; i < itemTypeSelect.options.length; i++) {
+            const key = itemTypeSelect.options[i].value;
+            itemTypeSelect.options[i].text = translations[lang]?.itemTypes?.[key] || itemTypeSelect.options[i].text;
+          }
+        }
+    }
+
+    // تغيير النمط
+    function applyTheme(theme) {
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+            document.body.style.background = '#222';
+            document.querySelectorAll('.upload-container, .item-card, .location-card').forEach(el => {
+                el.style.background = '#333';
+                el.style.color = '#fff';
+                el.style.borderColor = '#555';
+            });
+            const icon = document.querySelector('#themeButton i');
+            if (icon) { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
+        } else {
+            document.body.classList.remove('dark-theme');
+            document.body.style.background = '#f9f6e7';
+            document.querySelectorAll('.upload-container, .item-card, .location-card').forEach(el => {
+                el.style.background = '#fff';
+                el.style.color = '#222';
+                el.style.borderColor = '#ccc';
+            });
+            const icon = document.querySelector('#themeButton i');
+            if (icon) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const nameInput = document.getElementById('nameInput');
+        const itemTypeSelect = document.getElementById('itemTypeSelect');
+        const imageInput = document.getElementById('imageInput');
+
+        if (nameInput) nameInput.addEventListener('input', checkFieldsAndToggleUploadBtn);
+        if (itemTypeSelect) itemTypeSelect.addEventListener('change', checkFieldsAndToggleUploadBtn);
+        if (imageInput) imageInput.addEventListener('change', checkFieldsAndToggleUploadBtn);
+
+        // Also check on show/hide of sections (if your JS does that elsewhere)
+        // You may want to call checkFieldsAndToggleUploadBtn after any UI change
+
+        // إعداد اللغة
+        let currentLang = localStorage.getItem('lang') || 'ar';
+        applyLang(currentLang);
+
+        // إعداد النمط
+        let savedTheme = localStorage.getItem('theme');
+        applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+
+        // مستمع زر النمط
+        document.getElementById('themeButton').addEventListener('click', function() {
+            const isDark = document.body.classList.contains('dark-theme');
+            if (isDark) {
+                applyTheme('light');
+                localStorage.setItem('theme', 'light');
+            } else {
+                applyTheme('dark');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        // مستمع زر اللغة
+        document.getElementById('langButton').addEventListener('click', function(e) {
+            e.stopPropagation();
+            document.getElementById('lang-dropdown').style.display = 'block';
+        });
+
+        // مستمع خيارات اللغة
+        document.querySelectorAll('.lang-option').forEach(function(opt) {
+            opt.addEventListener('click', function() {
+                const selectedLang = this.getAttribute('data-lang');
+                localStorage.setItem('lang', selectedLang);
+                applyLang(selectedLang);
+                document.getElementById('lang-dropdown').style.display = 'none';
+            });
+        });
+
+        // إخفاء القائمة عند الضغط خارجها
+        document.addEventListener('click', function(e) {
+            const dropdown = document.getElementById('lang-dropdown');
+            if (dropdown && !dropdown.contains(e.target) && e.target.id !== 'langButton') {
+                dropdown.style.display = 'none';
+            }
+        });
+      });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
