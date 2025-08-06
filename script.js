@@ -266,7 +266,7 @@ $(document).ready(function() {
                             <span>${t.receivedRequests}</span>
                         </button>
                     `;
-                } else if (role === 'receiver_only') {
+                }  else if (role === 'receiver_only') {
                     actionsHtml += `
                         <button class="action-btn" id="receivedRequestsBtn">
                             <i class="fas fa-inbox" style="margin-left:8px;color:#ffc107;"></i>
@@ -315,6 +315,11 @@ $(document).ready(function() {
 
     async function checkHouse(event) {
         event.preventDefault();
+        // حماية honeypot: إذا تم ملء الحقل المخفي، لا ترسل الطلب
+        if ($('#website').val().trim() !== '') {
+            $('#result-message').text('تم رفض الطلب.').removeClass('success').addClass('error');
+            return;
+        }
         const houseName = $('#houseName').val().trim();
         if (houseName === '') {
             $('#result-message').text(translations[currentLang].enterHouseName || 'الرجاء إدخال اسم البيت').addClass('error');
