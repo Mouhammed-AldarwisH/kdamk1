@@ -291,6 +291,7 @@ $(document).ready(function() {
         if (event && typeof event.preventDefault === "function") {
             event.preventDefault();
         }
+
         // حماية honeypot: إذا تم ملء الحقل المخفي، لا ترسل الطلب
         if ($('#website').val().trim() !== '') {
             $('#result-message').text('تم رفض الطلب.').removeClass('success').addClass('error');
@@ -307,11 +308,14 @@ $(document).ready(function() {
         if (response.status === 'success') {
             $('#result-message').text(response.message).removeClass('error').addClass('success');
             localStorage.setItem('houseId', response.houseId);
-            
+            location.reload();
         } else {
 
             $('#result-message').text(response.message).removeClass('success').addClass('error');
         }
     }
+
+    // اربط الفورم بدالة handleCheckHouseForm لمنع إعادة تحميل الصفحة
+    $('#loginForm').on('submit', handleCheckHouseForm);
 
 }); // <-- نهاية $(document).ready
