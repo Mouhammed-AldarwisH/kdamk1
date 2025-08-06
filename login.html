@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html dir="rtl">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>التحقق من البيت</title>
@@ -21,6 +22,11 @@
             });
         }
     </script>
+
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d6efd">
+<link rel="apple-touch-icon" href="icon-192.png">
+
 </head>
 <body>
     <!-- اجعل أزرار التبديل أول عنصر في الـ body ليكون فوق أي طبقة -->
@@ -69,6 +75,12 @@
     <script src="users_by_home.js"></script>
     <script src="get_user.js"></script>
     <script src="script.js"></script>
+    <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js');
+  }
+</script>
+
 </body>
 </html>
 
