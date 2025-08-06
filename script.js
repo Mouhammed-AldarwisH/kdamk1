@@ -288,7 +288,10 @@ $(document).ready(function() {
     }
 
     async function checkHouse(event) {
-        event.preventDefault();
+        // اجعل event اختياري وتحقق منه قبل المنع
+        if (event && typeof event.preventDefault === "function") {
+            event.preventDefault();
+        }
         // حماية honeypot: إذا تم ملء الحقل المخفي، لا ترسل الطلب
         if ($('#website').val().trim() !== '') {
             $('#result-message').text('تم رفض الطلب.').removeClass('success').addClass('error');
@@ -315,9 +318,4 @@ $(document).ready(function() {
     window.checkHouse = checkHouse;
 
 }); // <-- نهاية $(document).ready
-        event.preventDefault();
-        // حماية honeypot: إذا تم ملء الحقل المخفي، لا ترسل الطلب
-        if ($('#website').val().trim() !== '') {
-            $('#result-message').text('تم رفض الطلب.').removeClass('success').addClass('error');
-            return;
-        }
+
