@@ -167,7 +167,7 @@ async function renderRows(selectedType = '') {
         filterBtn.style = `
             position: fixed;
             top: 10px;
-            right: 332px;
+            right: 250px;
             width: 60px;
             height: 60px;
             border-radius: 16px;
@@ -555,7 +555,7 @@ function setupConfirmButton() {
         const lang = localStorage.getItem('lang') || 'ar';
         btn.textContent = translations[lang]?.confirmOrder || translations.ar.confirmOrder;
         btn.style.position = 'fixed';
-        btn.style.bottom = '0px';
+        btn.style.bottom = '30px';
         btn.style.left = '50%';
         btn.style.transform = 'translateX(-50%)';
         btn.style.background = '#ffd700';
@@ -917,7 +917,7 @@ async function showSelectedItemsSummary() {
         deliveryBtn.id = 'choose-delivery-location-btn';
         deliveryBtn.textContent = 'اختر مكان التوصيل';
         deliveryBtn.style.position = 'fixed';
-        deliveryBtn.style.bottom = '0px';
+        deliveryBtn.style.bottom = '30px';
         deliveryBtn.style.left = '50%';
         deliveryBtn.style.transform = 'translateX(-50%)';
         deliveryBtn.style.background = '#35e549ff';
@@ -1122,7 +1122,7 @@ async function showLocationsGrid() {
         chooseServerBtn.id = 'choose-server-btn';
         chooseServerBtn.textContent = 'اختر الخادم';
         chooseServerBtn.style.position = 'fixed';
-        chooseServerBtn.style.bottom = '0px';
+        chooseServerBtn.style.bottom = '30px';
         chooseServerBtn.style.left = '50%';
         chooseServerBtn.style.transform = 'translateX(-50%)';
         chooseServerBtn.style.background = '#ffd700';
@@ -1355,7 +1355,7 @@ async function showUsersGrid() {
         sendOrderBtn.id = 'send-order-btn';
         sendOrderBtn.textContent = 'ارسال الطلب';
         sendOrderBtn.style.position = 'fixed';
-        sendOrderBtn.style.bottom = '0px';
+        sendOrderBtn.style.bottom = '30px';
         sendOrderBtn.style.left = '50%';
         sendOrderBtn.style.transform = 'translateX(-50%)';
         sendOrderBtn.style.background = '#ffd700';
