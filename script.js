@@ -287,8 +287,7 @@ $(document).ready(function() {
         });
     }
 
-    async function checkHouse(event) {
-        // اجعل event اختياري وتحقق منه قبل المنع
+    async function handleCheckHouseForm(event) {
         if (event && typeof event.preventDefault === "function") {
             event.preventDefault();
         }
@@ -303,7 +302,7 @@ $(document).ready(function() {
             $('#result-message').text(translations[currentLang].enterHouseName || 'الرجاء إدخال اسم البيت').addClass('error');
             return;
         }
-        // استدعاء الدالة مباشرة بدلاً من ajax
+        // استدعاء checkHouse من check_house.js
         const response = await window.checkHouse(houseName);
         if (response.status === 'success') {
             $('#result-message').text(response.message).removeClass('error').addClass('success');
@@ -313,8 +312,5 @@ $(document).ready(function() {
             $('#result-message').text(response.message).removeClass('success').addClass('error');
         }
     }
-
-    // Expose checkHouse to global scope for inline onsubmit
-    window.checkHouse = checkHouse;
 
 }); // <-- نهاية $(document).ready
