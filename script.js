@@ -146,32 +146,6 @@ $(document).ready(function() {
         }
     });
 
-    $('#loginForm').on('submit', function(e) {
-        e.preventDefault();
-        const houseName = $('#houseName').val().trim();
-        if (houseName === '') {
-            $('#error-message').text(translations[currentLang].enterHouseName || 'الرجاء إدخال اسم البيت');
-            return;
-        }
-        $.ajax({
-            type: 'POST',
-            url: 'login.php',
-            data: { houseName: houseName },
-            success: function(response) {
-                if (response.success) {
-                    if (response.houseId) {
-                        localStorage.setItem('houseId', response.houseId);
-                    }
-                } else {
-                    $('#error-message').text(translations[currentLang].wrongHouseName || 'اسم البيت غير صحيح');
-                }
-            },
-            error: function() {
-                $('#error-message').text(translations[currentLang].connectionError || 'حدث خطأ في الاتصال');
-            }
-        });
-    });
-
     // تحقق إذا كان المستخدم مسجل دخول (houseId موجود)
     const savedHouseId = localStorage.getItem('houseId');
     const savedUserId = localStorage.getItem('selectedUserId');
@@ -314,6 +288,32 @@ $(document).ready(function() {
     }
 
     async function checkHouse(event) {
+        event.preventDefault();
+        // حماية honeypot: إذا تم ملء الحقل المخفي، لا ترسل الطلب
+        if ($('#website').val().trim() !== '') {
+            $('#result-message').text('تم رفض الطلب.').removeClass('success').addClass('error');
+            return;
+        }
+        const houseName = $('#houseName').val().trim();
+        if (houseName === '') {
+            $('#result-message').text(translations[currentLang].enterHouseName || 'الرجاء إدخال اسم البيت').addClass('error');
+            return;
+        }
+        // استدعاء الدالة مباشرة بدلاً من ajax
+        const response = await window.checkHouse(houseName);
+        if (response.status === 'success') {
+            $('#result-message').text(response.message).removeClass('error').addClass('success');
+            localStorage.setItem('houseId', response.houseId);
+            location.reload(); // Reload to show the overlay
+        } else {
+            $('#result-message').text(response.message).removeClass('success').addClass('error');
+        }
+    }
+
+    // Expose checkHouse to global scope for inline onsubmit
+    window.checkHouse = checkHouse;
+
+}); // <-- نهاية $(document).ready
         event.preventDefault();
         // حماية honeypot: إذا تم ملء الحقل المخفي، لا ترسل الطلب
         if ($('#website').val().trim() !== '') {
