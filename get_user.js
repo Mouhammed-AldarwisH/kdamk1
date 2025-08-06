@@ -41,5 +41,4 @@
     // اجعل الدالة متاحة في window
     window.getUser = getUser;
 })();
-    console.log(result);
-});
+    
