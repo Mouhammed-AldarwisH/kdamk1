@@ -318,4 +318,3 @@ $(document).ready(function() {
     window.checkHouse = checkHouse;
 
 }); // <-- نهاية $(document).ready
-
