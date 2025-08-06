@@ -44,6 +44,10 @@
                 <input type="text" id="houseName" name="houseName" required>
                 <label>اسم البيت</label>
             </div>
+            <!-- حقل honeypot مخفي لمنع البوتات -->
+            <div style="display:none;">
+                <input type="text" id="website" name="website" autocomplete="off" tabindex="-1">
+            </div>
             <button type="submit">تحقق</button>
             <div id="result-message" class="result-message"></div>
         </form>
@@ -55,7 +59,7 @@
             <div class="options-grid">
                 <!-- سيتم تعبئة أسماء المستخدمين هنا ديناميكياً -->
             </div>
-        </div>
+        </div> 
     </div>
     <script src="check_house.js"></script>
     <script src="users_by_home.js"></script>

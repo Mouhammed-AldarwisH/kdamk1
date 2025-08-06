@@ -14,7 +14,7 @@ async function fetchUsersByHomeId(houseId) {
                 apikey: SUPABASE_API_KEY,
                 Authorization: `Bearer ${SUPABASE_API_KEY}`,
                 'Content-Type': 'application/json'
-            }
+            } 
         });
         if (!res.ok) {
             return { status: 'error', message: 'خطأ في الاتصال' };

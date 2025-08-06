@@ -36,10 +36,9 @@
         } catch (e) {
             return { status: 'error', message: 'خطأ في الاتصال' };
         }
-    }
+    } 
 
     // اجعل الدالة متاحة في window
     window.getUser = getUser;
 })();
-    console.log(result);
-});
+    

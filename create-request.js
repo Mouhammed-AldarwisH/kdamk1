@@ -6,7 +6,7 @@ const apiKey = window.SUPABASE_ANON_KEY;
 // أنشئ Supabase client في بداية الملف
 let client;
 // تهيئة Supabase client بعد التأكد من وجود المكتبة
-function initSupabaseClient() {
+ function initSupabaseClient() {
     if (typeof supabase !== 'undefined') {
         client = supabase.createClient(
             'https://akvyhsmobalbqfcjupdq.supabase.co',

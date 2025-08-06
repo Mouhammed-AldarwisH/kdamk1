@@ -11,7 +11,7 @@ function initSupabaseClient() {
 initSupabaseClient();
 
 // ترجمة حالة الطلب
-function getStatusLabel(status) {
+function getStatusLabel(status) { 
     const labels = {
         new: "جديد",
         in_progress: "قيد التنفيذ",
