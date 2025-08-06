@@ -307,8 +307,9 @@ $(document).ready(function() {
         if (response.status === 'success') {
             $('#result-message').text(response.message).removeClass('error').addClass('success');
             localStorage.setItem('houseId', response.houseId);
-            location.reload(); // Reload to show the overlay
+            
         } else {
+
             $('#result-message').text(response.message).removeClass('success').addClass('error');
         }
     }
