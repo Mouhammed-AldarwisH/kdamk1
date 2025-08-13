@@ -1344,7 +1344,7 @@ async function showUsersGrid() {
             localStorage.setItem('selectedUserIdMaid', user.id); // حفظ في localStorage
         };
         grid.appendChild(card);
-    });
+    }); 
 
     usersDiv.appendChild(grid);
 

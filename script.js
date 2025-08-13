@@ -21,7 +21,8 @@ const translations = {
         theme: "النمط",
         language: "اللغة",
         enterHouseName: "الرجاء إدخال اسم البيت",
-        wrongHouseName: "اسم البيت غير صحيح"
+        wrongHouseName: "اسم البيت غير صحيح",
+        addHouseImages: "إضافة صور للبيت"
     },
     en: {
         confirm: "Are you sure?",
@@ -44,7 +45,8 @@ const translations = {
         theme: "Theme",
         language: "Language",
         enterHouseName: "Please enter house name",
-        wrongHouseName: "Wrong house name"
+        wrongHouseName: "Wrong house name",
+        addHouseImages: "Add House Images"
     },
     ph: {
         confirm: "Sigurado ka ba?",
@@ -67,7 +69,8 @@ const translations = {
         theme: "Tema",
         language: "Wika",
         enterHouseName: "Ilagay ang pangalan ng bahay",
-        wrongHouseName: "Maling pangalan ng bahay"
+        wrongHouseName: "Maling pangalan ng bahay",
+        addHouseImages: "Magdagdag ng mga Larawan ng Bahay"
     }
 };
 
@@ -239,6 +242,10 @@ $(document).ready(function() {
                             <i class="fas fa-inbox" style="margin-left:8px;color:#ffc107;"></i>
                             <span>${t.receivedRequests}</span>
                         </button>
+                        <button class="action-btn" id="addHouseImagesBtn">
+                            <i class="fas fa-image" style="margin-left:8px;color:#17a2b8;"></i>
+                            <span>${t.addHouseImages}</span>
+                        </button>
                     `;
                 }  else if (role === 'receiver_only') {
                     actionsHtml += `
@@ -249,6 +256,10 @@ $(document).ready(function() {
                         <button class="action-btn" id="logRequestsBtn">
                             <i class="fas fa-book" style="margin-left:8px;color:#6c757d;"></i>
                             <span>${t.logRequests}</span>
+                        </button>
+                        <button class="action-btn" id="addHouseImagesBtn">
+                            <i class="fas fa-image" style="margin-left:8px;color:#17a2b8;"></i>
+                            <span>${t.addHouseImages}</span>
                         </button>
                     `;
                 }
@@ -279,6 +290,11 @@ $(document).ready(function() {
                     window.location.href = "my-requests.html";
                 });
 
+                // مستمع زر إضافة صور للبيت
+                $('#addHouseImagesBtn').click(function() {
+                    window.location.href = "upload-image.html";
+                });
+
             } else {
                 $('.overlay-content').html('<div style="color:red;">' + translations[currentLang].userFetchError + '</div>');
             }
@@ -298,7 +314,7 @@ $(document).ready(function() {
             return;
         }
 
-        const houseName = $('#houseName').val().trim();
+        const houseName = $('#houseName').val().trim(); 
         if (houseName === '') {
             $('#result-message').text(translations[currentLang].enterHouseName || 'الرجاء إدخال اسم البيت').addClass('error');
             return;

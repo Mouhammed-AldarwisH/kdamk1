@@ -8,7 +8,7 @@ function initSupabaseClient() {
         );
     }
 }
-initSupabaseClient();
+initSupabaseClient(); 
 
 // ترجمة حالة الطلب
 function getStatusLabel(status) { 

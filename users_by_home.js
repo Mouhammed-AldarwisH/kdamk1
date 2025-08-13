@@ -9,7 +9,7 @@ async function fetchUsersByHomeId(houseId) {
     }
     const url = `${SUPABASE_URL}/rest/v1/users?home_id=eq.${encodeURIComponent(houseId)}`;
     try {
-        const res = await fetch(url, {
+        const res = await fetch(url, { 
             headers: {
                 apikey: SUPABASE_API_KEY,
                 Authorization: `Bearer ${SUPABASE_API_KEY}`,

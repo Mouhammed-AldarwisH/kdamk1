@@ -2,7 +2,7 @@
 async function checkHouse(houseName) {
     if (!houseName || typeof houseName !== 'string' || !houseName.trim()) {
         return { status: 'error', message: 'لم يتم إدخال اسم البيت' };
-    }
+    } 
     houseName = houseName.trim();
     const apiKey = window.SUPABASE_ANON_KEY;
     const url = 'https://akvyhsmobalbqfcjupdq.supabase.co/rest/v1/homes?name=eq.' + encodeURIComponent(houseName);

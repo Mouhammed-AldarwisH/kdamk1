@@ -13,7 +13,7 @@ initSupabaseClient();
 let selectedType = null;
 let uploadedImageUrl = null;
  
-// مستمع لاختيار النوع
+ // مستمع لاختيار النوع
 document.querySelectorAll('.select-type-btn').forEach(btn => {
     btn.onclick = function() {
         selectedType = btn.dataset.type;
