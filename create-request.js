@@ -145,50 +145,29 @@ function loadAudiosFromStorage() {
 async function renderRows(selectedType = '') {
     const container = document.getElementById('items-container');
     container.innerHTML = '';
-    container.style.width = '100vw';
-    container.style.maxWidth = '100%';
+    container.style.width = window.innerWidth <= 600 ? '100vw' : '100vw';
+    container.style.maxWidth = window.innerWidth <= 600 ? '100vw' : '100%';
     container.style.boxSizing = 'border-box';
-    container.style.padding = '60px 0px 0px 0px'; // استخدم padding-top بدل marginTop
-    container.style.marginTop = '0'; // أزل أي هوامش علوية قديمة
+    container.style.padding = window.innerWidth <= 600 ? '24px 0px 0px 0px' : '40px 0px 0px 0px';
+    container.style.marginTop = window.innerWidth <= 600 ? '120px' : '200px';
+    container.style.overflowX = window.innerWidth <= 600 ? 'hidden' : '';
+    container.style.display = 'flex';
+    container.style.flexDirection = 'column';
+    container.style.alignItems = 'center';
+    container.style.justifyContent = 'center';
 
     const items = await fetchItems();
     if (!items || items.length === 0) {
         container.innerHTML = '<div style="text-align:center; color:#888; font-size:18px; margin:40px 0;">لا توجد عناصر متاحة لهذا البيت.</div>';
+        // أخفِ شريط الفلتر إذا لا يوجد عناصر
+        const filterBar = document.getElementById('type-filter-bar');
+        if (filterBar) filterBar.style.display = 'none';
         return;
     }
     const grouped = groupItemsByType(items);
 
-    // زر الفلتر ثابت أعلى الشاشة ومزاح إلى اليمين
-    let filterBtn = document.getElementById('show-filter-btn');
-    if (!filterBtn) {
-        filterBtn = document.createElement('button');
-        filterBtn.id = 'show-filter-btn';
-        filterBtn.textContent = 'فلتر';
-        filterBtn.style = `
-            position: fixed;
-            top: 10px;
-            right: 250px;
-            width: 60px;
-            height: 60px;
-            border-radius: 16px;
-            border: none;
-            background: #ffd700;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 20px;
-            z-index: 10001;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
-            display: block;
-        `;
-        document.body.appendChild(filterBtn);
-
-        filterBtn.onclick = function() {
-            showTypeFilterPopup(Object.keys(grouped));
-        };
-    }
-
-    // رسم الفلتر كنافذة منبثقة (سيتم رسمه عند الضغط على زر الفلتر فقط)
-    // ...لا ترسم الفلتر هنا...
+    // رسم أزرار الفلتر أعلى الحاوية (تحت زر الهوم)
+    renderTypeFilterButtons(Object.keys(grouped), selectedType);
 
     // إذا تم اختيار نوع، اعرض فقط هذا النوع
     const typesToShow = selectedType ? [selectedType] : Object.keys(grouped);
@@ -204,27 +183,29 @@ async function renderRows(selectedType = '') {
         // صف جديد لكل نوع
         const rowDiv = document.createElement('div');
         rowDiv.className = 'items-row';
-        rowDiv.style.width = '90vw';
-        rowDiv.style.maxWidth = '100%';
-        rowDiv.style.overflowX = 'auto';
+        rowDiv.style.width = window.innerWidth <= 600 ? '100vw' : '90vw';
+        rowDiv.style.maxWidth = window.innerWidth <= 600 ? '100vw' : '100%';
+        rowDiv.style.overflowX = window.innerWidth <= 600 ? 'auto' : 'auto';
         rowDiv.style.display = 'flex';
-        rowDiv.style.gap = '18px';
-        rowDiv.style.height = '300px';
+        rowDiv.style.gap = window.innerWidth <= 600 ? '10px' : '18px';
+        rowDiv.style.height = window.innerWidth <= 600 ? 'auto' : '300px';
         rowDiv.style.alignItems = 'center';
         rowDiv.style.marginBottom = '32px';
         rowDiv.style.boxSizing = 'border-box';
-        rowDiv.style.padding = '0 12px';
+        rowDiv.style.padding = window.innerWidth <= 600 ? '0 0px' : '0 12px';
 
         // كروت العناصر
         grouped[type].forEach(item => {
             const count = cart[item.id] || 0;
             const card = document.createElement('div');
             card.className = 'item-card';
-            card.style = "border:1px solid #ccc; border-radius:12px; padding:24px; width:260px; text-align:center; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.07); flex:0 0 auto;";
+            card.style = window.innerWidth <= 600
+                ? "border:1px solid #ccc; border-radius:12px; padding:10px; width:150px; min-width:140px; max-width:150px; text-align:center; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.07); flex:0 0 auto; box-sizing:border-box; margin:0;"
+                : "border:1px solid #ccc; border-radius:12px; padding:24px; width:260px; text-align:center; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,0.07); flex:0 0 auto;";
 
             card.innerHTML = `
-                <div style="height:160px; margin-bottom:12px; display:flex; align-items:center; justify-content:center;">
-                    <img src="${item.image}" alt="Item Image" style="width:160px; height:160px; object-fit:cover; border-radius:12px;">
+                <div style="height:${window.innerWidth <= 600 ? '110px' : '160px'}; margin-bottom:12px; display:flex; align-items:center; justify-content:center;">
+                    <img src="${item.image}" alt="Item Image" style="width:${window.innerWidth <= 600 ? '110px' : '160px'}; height:${window.innerWidth <= 600 ? '110px' : '160px'}; object-fit:cover; border-radius:12px;">
                 </div>
                 <div style="font-weight:600; font-size:18px; margin-bottom:16px;">${item.name}</div>
                 <div id="controls-${item.id}" class="item-controls">
@@ -244,105 +225,220 @@ async function renderRows(selectedType = '') {
     }
 }
 
-// إضافة كود CSS لهزة زر الفلتر إذا لم يكن موجوداً
-(function injectShakeFilterCSS() {
-    if (!document.getElementById('filter-btn-shake-style')) {
-        const style = document.createElement('style');
-        style.id = 'filter-btn-shake-style';
-        style.textContent = `
-        @keyframes shake-filter-btn {
-            0% { transform: scale(1) rotate(0deg);}
-            20% { transform: scale(1.05) rotate(-6deg);}
-            40% { transform: scale(1.1) rotate(6deg);}
-            60% { transform: scale(1.05) rotate(-6deg);}
-            80% { transform: scale(1.02) rotate(6deg);}
-            100% { transform: scale(1) rotate(0deg);}
+// رسم أزرار الفلتر في صف أفقي تحت زر الهوم وفوق items-container
+function renderTypeFilterButtons(types, selectedType = '') {
+    // أنشئ أو استرجع الـ wrapper الخاص بالفلتر
+    let filterBarWrapper = document.getElementById('type-filter-bar-wrapper');
+    if (!filterBarWrapper) {
+        filterBarWrapper = document.createElement('div');
+        filterBarWrapper.id = 'type-filter-bar-wrapper';
+        filterBarWrapper.style.display = 'flex';
+        filterBarWrapper.style.justifyContent = 'center';
+        filterBarWrapper.style.alignItems = 'center';
+        filterBarWrapper.style.width = window.innerWidth <= 600 ? '100vw' : '100%';
+        filterBarWrapper.style.maxWidth = window.innerWidth <= 600 ? '100vw' : '100%';
+        filterBarWrapper.style.position = 'absolute';
+        filterBarWrapper.style.top = window.innerWidth <= 600 ? '57px' : '128px';
+        filterBarWrapper.style.zIndex = '1001';
+        filterBarWrapper.style.boxSizing = 'border-box';
+        filterBarWrapper.style.padding = window.innerWidth <= 600 ? '0 0px' : '0 24px';
+        filterBarWrapper.style.margin = window.innerWidth <= 600 ? '12px 0 0 0' : '24px 0 0 0';
+        filterBarWrapper.style.background = '#fff';
+        filterBarWrapper.style.borderRadius = '24px';
+        filterBarWrapper.style.boxShadow = '0 2px 12px rgba(0,0,0,0.10)';
+        filterBarWrapper.style.border = '1px solid #eee';
+        filterBarWrapper.style.overflowX = 'auto';
+        filterBarWrapper.style.overflowY = 'visible';
+        filterBarWrapper.style.scrollBehavior = 'smooth';
+        filterBarWrapper.style.transition = 'box-shadow 0.2s';
+        // أدخله بعد زر الهوم وقبل items-container
+        const homeBtn = document.getElementById('home-btn');
+        const itemsContainer = document.getElementById('items-container');
+        if (homeBtn && homeBtn.parentNode) {
+            homeBtn.parentNode.insertBefore(filterBarWrapper, itemsContainer);
+        } else {
+            itemsContainer.parentNode.insertBefore(filterBarWrapper, itemsContainer);
         }
-        #show-filter-btn.shake {
-            animation: shake-filter-btn 0.5s infinite;
-        }
-        `;
-        document.head.appendChild(style);
     }
-})();
+    filterBarWrapper.style.display = 'flex';
 
-// نافذة الفلتر المنبثقة
-function showTypeFilterPopup(types) {
-    let popup = document.getElementById('type-filter-popup');
-    if (!popup) {
-        popup = document.createElement('div');
-        popup.id = 'type-filter-popup';
-        popup.style = `
-            position: fixed;
-            top: 90px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 2px 16px rgba(0,0,0,0.18);
-            padding: 24px 18px;
-            z-index: 10000;
-            min-width: 220px;
-            text-align: center;
-        `;
-        document.body.appendChild(popup);
+    // أنشئ أو استرجع شريط الفلتر نفسه داخل الـ wrapper
+    let filterBar = document.getElementById('type-filter-bar');
+    if (!filterBar) {
+        filterBar = document.createElement('div');
+        filterBar.id = 'type-filter-bar';
+        filterBarWrapper.appendChild(filterBar);
     }
-    popup.innerHTML = '';
+    filterBar.style.display = 'flex';
+    filterBar.style.flexDirection = 'row';
+    filterBar.style.justifyContent = 'flex-start';
+    filterBar.style.alignItems = 'center';
+    // قلل قيمة الـ gap هنا
+    filterBar.style.gap = window.innerWidth <= 600 ? '1px' : '3px';
+    filterBar.style.width = 'auto';
+    filterBar.style.minWidth = 'fit-content';
+    filterBar.style.overflowX = 'auto';
+    filterBar.style.overflowY = 'visible';
+    filterBar.style.padding = window.innerWidth <= 600 ? '8px 8px' : '12px 18px';
+    filterBar.style.boxSizing = 'border-box';
+
+    filterBar.innerHTML = '';
 
     // زر "الكل"
     const allBtn = document.createElement('button');
     allBtn.textContent = 'الكل';
     allBtn.className = 'type-filter-btn';
-    allBtn.style = "margin:0 8px 12px 8px; padding:8px 18px; border-radius:18px; border:none; background:#eee; font-weight:600; cursor:pointer; font-size:16px;";
+    allBtn.style.padding = '8px 18px';
+    allBtn.style.borderRadius = '18px';
+    allBtn.style.border = 'none';
+    allBtn.style.background = (selectedType === '' ? '#ffd700' : '#eee');
+    allBtn.style.fontWeight = '600';
+    allBtn.style.cursor = 'pointer';
+    allBtn.style.fontSize = '16px';
+    allBtn.style.transition = 'background 0.2s';
     allBtn.dataset.type = '';
-    popup.appendChild(allBtn);
+    filterBar.appendChild(allBtn);
 
     types.forEach(type => {
         const btn = document.createElement('button');
         btn.textContent = getTypeLabel(type);
         btn.className = 'type-filter-btn';
-        btn.style = "margin:0 8px 12px 8px; padding:8px 18px; border-radius:18px; border:none; background:#eee; font-weight:600; cursor:pointer; font-size:16px;";
+        btn.style.padding = window.innerWidth <= 600 ? '6px 12px' : '8px 18px';
+        btn.style.borderRadius = '18px';
+        btn.style.border = 'none';
+        btn.style.background = (selectedType === type ? '#ffd700' : '#eee');
+        btn.style.fontWeight = '600';
+        btn.style.cursor = 'pointer';
+        btn.style.fontSize = window.innerWidth <= 600 ? '14px' : '16px';
+        btn.style.transition = 'background 0.2s';
         btn.dataset.type = type;
-        popup.appendChild(btn);
+        filterBar.appendChild(btn);
     });
 
-    // تمييز الزر المختار
-    // لا تحفظ حالة الفلتر في localStorage
-    let selectedType = ''; // دائماً لا يوجد فلتر مفعّل عند فتح النافذة
-    popup.querySelectorAll('.type-filter-btn').forEach(btn => {
-        btn.style.background = (btn.dataset.type === selectedType) ? '#ffd700' : '#eee';
-    });
-
-    // مستمع للأزرار
-    popup.querySelectorAll('.type-filter-btn').forEach(btn => {
+    // مستمعات الأزرار
+    filterBar.querySelectorAll('.type-filter-btn').forEach(btn => {
         btn.onclick = function() {
             renderRows(btn.dataset.type);
-            popup.style.display = 'none';
-
-            // تغيير لون زر الفلتر حسب الاختيار
-            const filterBtn = document.getElementById('show-filter-btn');
-            if (btn.dataset.type && btn.dataset.type !== '') {
-                filterBtn.style.background = '#35e549ff'; // أحمر
-                filterBtn.classList.add('shake'); // اهتزاز مستمر
-            } else {
-                filterBtn.style.background = '#ffd700'; // أصفر
-                filterBtn.classList.remove('shake');
-            }
+            // تحديث لون الأزرار
+            filterBar.querySelectorAll('.type-filter-btn').forEach(b => {
+                b.style.background = (b.dataset.type === btn.dataset.type) ? '#ffd700' : '#eee';
+            });
         };
     });
-
-    // زر إغلاق
-    const closeBtn = document.createElement('button');
-    closeBtn.textContent = 'إغلاق';
-    closeBtn.style = "margin-top:16px; padding:6px 18px; border-radius:12px; border:none; background:#e53935; color:#fff; font-weight:600; cursor:pointer; font-size:15px;";
-    closeBtn.onclick = function() {
-        popup.style.display = 'none';
-    };
-    popup.appendChild(document.createElement('br'));
-    popup.appendChild(closeBtn);
-
-    popup.style.display = 'block';
 }
+
+// استرجاع شريط الفلتر عند العودة من صفحة اللوكيشنات
+function restoreFilterBar() {
+    const filterBarWrapper = document.getElementById('type-filter-bar-wrapper');
+    if (filterBarWrapper) {
+        filterBarWrapper.style.display = 'flex';
+    }
+}
+
+// إضافة كود CSS متأقلم للجوال مرة واحدة + كود خاص للفلتر المتحرك
+(function injectMobileResponsiveCSS() {
+    if (!document.getElementById('mobile-responsive-style')) {
+        const style = document.createElement('style');
+        style.id = 'mobile-responsive-style';
+        style.textContent = `
+        @media (max-width: 600px) {
+            html, body {
+                max-width: 100vw !important;
+                overflow-x: hidden !important;
+            }
+            #items-container {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                box-sizing: border-box !important;
+                padding: 24px 0px 0px 0px !important;
+                margin-top: 120px !important;
+                overflow-x: hidden !important;
+            }
+            .items-row {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                gap: 10px !important;
+                height: auto !important;
+                padding: 0 0px !important;
+                box-sizing: border-box !important;
+                overflow-x: auto !important;
+            }
+            .item-card {
+                width: 150px !important;
+                min-width: 140px !important;
+                max-width: 150px !important;
+                padding: 10px !important;
+                box-sizing: border-box !important;
+                margin: 0 !important;
+            }
+            .item-card img {
+                width: 110px !important;
+                height: 110px !important;
+            }
+            #type-filter-bar-wrapper {
+                width: 100vw !important;
+                max-width: 100vw !important;
+                border-radius: 18px !important;
+                box-shadow: 0 2px 12px rgba(0,0,0,0.10) !important;
+                border: 1px solid #eee !important;
+                background: #fff !important;
+                overflow-x: auto !important;
+                padding: 0 !important;
+                margin-top: 12px !important;
+                box-sizing: border-box !important;
+            }
+            #type-filter-bar {
+                flex-direction: row !important;
+                gap: 3px !important;
+                font-size: 14px !important;
+                width: auto !important;
+                min-width: fit-content !important;
+                overflow-x: auto !important;
+                padding: 8px 8px !important;
+                box-sizing: border-box !important;
+            }
+            #home-btn {
+                top: 12px !important;
+                right: 12px !important;
+                width: 44px !important;
+                height: 44px !important;
+                font-size: 22px !important;
+                border-radius: 12px !important;
+            }
+        }
+        /* فلتر متحرك وحدود دائرية وظلال */
+        #type-filter-bar-wrapper {
+            border-radius: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.10);
+            border: 1px solid #eee;
+            background: #fff;
+            overflow-x: auto;
+            padding: 0;
+            margin-top: 24px;
+            box-sizing: border-box;
+            transition: box-shadow 0.2s;
+        }
+        #type-filter-bar {
+            display: flex;
+            flex-direction: row;
+            gap: 7px;
+            width: auto;
+            min-width: fit-content;
+            overflow-x: auto;
+            padding: 12px 18px;
+            box-sizing: border-box;
+        }
+        `;
+        document.head.appendChild(style);
+    }
+    // منع التمرير الأفقي للصفحة دائماً في الجوال
+    if (window.innerWidth <= 600) {
+        document.documentElement.style.overflowX = 'hidden';
+        document.body.style.overflowX = 'hidden';
+        document.documentElement.style.maxWidth = '100vw';
+        document.body.style.maxWidth = '100vw';
+    }
+})();
 
 // دالة منفصلة لرسم أزرار التحكم للعنصر
 function renderItemControls(itemId, count) {
@@ -397,7 +493,7 @@ function updateCartCountBadge() {
         badge = document.createElement('div');
         badge.id = 'cart-count-badge';
         badge.style.position = 'fixed';
-        badge.style.bottom = '15px'; // فوق زر التأكيد
+        badge.style.bottom = '20px'; // فوق زر التأكيد
         badge.style.left = '22%';
         badge.style.transform = 'translateX(-50%)';
         badge.style.background = '#e53935'; // أحمر
@@ -545,6 +641,7 @@ document.addEventListener('click', function(e) {
     }
 });
 
+
 // إضافة زر التأكيد الثابت أسفل الشاشة
 function setupConfirmButton() {
     let btn = document.getElementById('confirm-order-btn');
@@ -555,7 +652,7 @@ function setupConfirmButton() {
         const lang = localStorage.getItem('lang') || 'ar';
         btn.textContent = translations[lang]?.confirmOrder || translations.ar.confirmOrder;
         btn.style.position = 'fixed';
-        btn.style.bottom = '30px';
+        btn.style.bottom = '5px';
         btn.style.left = '50%';
         btn.style.transform = 'translateX(-50%)';
         btn.style.background = '#ffd700';
@@ -589,7 +686,11 @@ function setupConfirmButton() {
             if (filterBtn) {
                 filterBtn.style.display = 'none';
             }
-
+            // إخفاء شريط الفلتر بالكامل
+            const filterBarWrapper = document.getElementById('type-filter-bar-wrapper');
+            if (filterBarWrapper) filterBarWrapper.style.display = 'none';
+             const homeBtn = document.getElementById('home-btn');
+ if (homeBtn) homeBtn.style.display = 'none';
             // عرض العناصر المختارة فقط مع عددها
             showSelectedItemsSummary();
         });
@@ -615,15 +716,15 @@ document.addEventListener('DOMContentLoaded', function() {
         homeBtn.innerHTML = '<i class="fas fa-home"></i>';
         homeBtn.style = `
             position:fixed;
-            top:24px;
-            right:24px;
-            width:56px;
-            height:56px;
+            top:${window.innerWidth <= 600 ? '12px' : '24px'};
+            right:${window.innerWidth <= 600 ? '12px' : '24px'};
+            width:${window.innerWidth <= 600 ? '44px' : '56px'};
+            height:${window.innerWidth <= 600 ? '44px' : '56px'};
             background:#1976d2;
             color:#fff;
             border:none;
-            border-radius:16px;
-            font-size:28px;
+            border-radius:${window.innerWidth <= 600 ? '12px' : '16px'};
+            font-size:${window.innerWidth <= 600 ? '22px' : '28px'};
             box-shadow:0 2px 8px rgba(0,0,0,0.12);
             cursor:pointer;
             display:flex;
@@ -887,7 +988,6 @@ async function showSelectedItemsSummary() {
             if (summaryDiv) {
                 summaryDiv.style.display = 'none';
             }
-            
             const itemsContainer = document.getElementById('items-container');
             if (itemsContainer) itemsContainer.style.display = '';
             
@@ -906,7 +1006,9 @@ async function showSelectedItemsSummary() {
             // أخفِ زر مكان التوصيل عند العودة
             const deliveryBtn = document.getElementById('choose-delivery-location-btn');
             if (deliveryBtn) deliveryBtn.style.display = 'none';
-        };
+            // أظهر شريط الفلتر عند العودة
+           
+                   };
     }
     topBackBtn.style.display = 'block';
 
@@ -948,6 +1050,11 @@ async function showSelectedItemsSummary() {
         topBackBtn.style.display = 'none';
         // أخفِ زر مكان التوصيل عند العودة
         if (deliveryBtn) deliveryBtn.style.display = 'none';
+         const filterBarWrapper = document.getElementById('type-filter-bar-wrapper');
+            if (filterBarWrapper) filterBarWrapper.style.display = 'flex';
+ const homeBtn = document.getElementById('home-btn');
+ if (homeBtn) homeBtn.style.display = 'block';
+       
     };
 
     // عند الضغط على زر "اختر مكان التوصيل" أخفِ كل ما يتعلق بالسلة
@@ -1435,6 +1542,7 @@ async function sendOrderToDatabase() {
   const itemIds = JSON.parse(localStorage.getItem('selectedItemIds') || '[]');
 
   // تحقق من البيانات
+
   if (!senderId || !receiverId || !locationId || itemIds.length === 0 || !homeId) {
     alert('يرجى التأكد من اختيار كل الحقول المطلوبة.');
     return;
@@ -1609,5 +1717,3 @@ document.addEventListener('click', function(e) {
     sendOrderToDatabase();
   }
 });
-
-

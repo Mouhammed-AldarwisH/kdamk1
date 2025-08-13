@@ -7,8 +7,38 @@ function initSupabaseClient() {
             apiKey
         );
     }
-}
+} 
 initSupabaseClient();
+
+// زر الهوم مربع وفوق يمين مثل my-requests.js
+let homeBtn = document.getElementById('home-btn');
+if (!homeBtn) { 
+    homeBtn = document.createElement('button');
+    homeBtn.id = 'home-btn';
+    homeBtn.innerHTML = '<i class="fas fa-home"></i>';
+    homeBtn.style = `
+        position:fixed;
+        top:24px;
+        right:24px;
+        width:56px;
+        height:56px;
+        background:#1976d2;
+        color:#fff;
+        border:none;
+        border-radius:16px;
+        font-size:28px;
+        box-shadow:0 2px 8px rgba(0,0,0,0.12);
+        cursor:pointer;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        z-index:1000;
+    `;
+    homeBtn.onclick = function() {
+        window.location.href = 'login.html';
+    };
+    document.body.appendChild(homeBtn);
+}
 
 let selectedType = null;
 let uploadedImageUrl = null;

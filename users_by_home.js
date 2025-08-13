@@ -15,7 +15,7 @@ async function fetchUsersByHomeId(houseId) {
                 Authorization: `Bearer ${SUPABASE_API_KEY}`,
                 'Content-Type': 'application/json'
             } 
-        });
+        }); 
         if (!res.ok) {
             return { status: 'error', message: 'خطأ في الاتصال' };
         }

@@ -24,7 +24,7 @@ const translations = {
         wrongHouseName: "اسم البيت غير صحيح",
         addHouseImages: "إضافة صور للبيت"
     },
-    en: {
+    en: { 
         confirm: "Are you sure?",
         yes: "Yes",
         no: "No",

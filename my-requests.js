@@ -7,7 +7,7 @@ function initSupabaseClient() {
             apiKey
         );
     }
-}
+} 
 initSupabaseClient(); 
 
 // ترجمة حالة الطلب
