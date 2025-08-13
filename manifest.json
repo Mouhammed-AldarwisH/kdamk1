@@ -1,7 +1,7 @@
 {
   "name": "Kdamk App",
   "short_name": "Kdamk",
-  "start_url": "/kdamk1/login.html",
+  "start_url": "/kdamk1/create-request.html",
   "display": "standalone",
   "background_color": "#000000", 
   "theme_color": "#000000",

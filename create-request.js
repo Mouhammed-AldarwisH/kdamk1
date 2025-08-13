@@ -1162,17 +1162,16 @@ async function showLocationsGrid() {
             </div>
             <div style="font-weight:600; font-size:15px; margin-bottom:6px;">${location.name}</div>
         `;
-        // يمكنك هنا إضافة حدث اختيار اللوكيشن
+        // عند الضغط على كارت اللوكيشن، تظهر شبكة المستخدمين مباشرة
         card.onclick = function() {
-            // حفظ مكان التوصيل المختار مؤقتاً
             selectedLocationId = location.id;
             localStorage.setItem('selectedLocationId', location.id);
-            // تمييز الكارت المختار
             grid.querySelectorAll('.location-card').forEach(c => c.style.boxShadow = '0 2px 8px rgba(0,0,0,0.07)');
             card.style.boxShadow = '0 0 0 3px #35e549ff';
-            // تفعيل زر اختيار الخادم
-            chooseServerBtn.disabled = false;
-            chooseServerBtn.style.opacity = '1';
+            // انتظر ثانية واحدة ثم نفذ الاكشن (إظهار المستخدمين)
+            setTimeout(() => {
+                showUsersGrid();
+            }, 200);
         };
         grid.appendChild(card);
     });
@@ -1210,9 +1209,6 @@ async function showLocationsGrid() {
         if (locationsDiv) locationsDiv.style.display = 'none';
         // أخفِ زر العودة الخاص باللوكيشنات
         locationsBackBtn.style.display = 'none';
-        // أخفِ زر اختيار الخادم
-        const chooseServerBtn = document.getElementById('choose-server-btn');
-        if (chooseServerBtn) chooseServerBtn.style.display = 'none';
         // أظهر السلة وزر العودة العلوي وزر مكان التوصيل
         const summaryDiv = document.getElementById('selected-items-summary');
         if (summaryDiv) summaryDiv.style.display = 'block';
@@ -1221,71 +1217,6 @@ async function showLocationsGrid() {
         const deliveryBtn = document.getElementById('choose-delivery-location-btn');
         if (deliveryBtn) deliveryBtn.style.display = 'block';
     };
-
-    // زر اختيار الخادم ثابت أسفل شاشة اللوكيشنات
-    let chooseServerBtn = document.getElementById('choose-server-btn');
-    if (!chooseServerBtn) {
-        chooseServerBtn = document.createElement('button');
-        chooseServerBtn.id = 'choose-server-btn';
-        chooseServerBtn.textContent = 'اختر الخادم';
-        chooseServerBtn.style.position = 'fixed';
-        chooseServerBtn.style.bottom = '30px';
-        chooseServerBtn.style.left = '50%';
-        chooseServerBtn.style.transform = 'translateX(-50%)';
-        chooseServerBtn.style.background = '#ffd700';
-        chooseServerBtn.style.color = '#222';
-        chooseServerBtn.style.fontWeight = '700';
-        chooseServerBtn.style.fontSize = '20px';
-        chooseServerBtn.style.padding = '16px 40px';
-        chooseServerBtn.style.border = 'none';
-        chooseServerBtn.style.borderRadius = '32px';
-        chooseServerBtn.style.boxShadow = '0 2px 12px rgba(0,0,0,0.08)';
-        chooseServerBtn.style.zIndex = '10005';
-        chooseServerBtn.style.cursor = 'pointer';
-        document.body.appendChild(chooseServerBtn);
-
-        chooseServerBtn.onclick = function() {
-            // لا تسمح بالضغط إذا لم يتم اختيار مكان
-            if (!selectedLocationId) {
-                chooseServerBtn.disabled = true;
-                chooseServerBtn.style.opacity = '0.6';
-                return;
-            }
-            // أخفِ كل ما يتعلق بقائمة اللوكيشنات
-            const locationsDiv = document.getElementById('locations-grid');
-            if (locationsDiv) locationsDiv.style.display = 'none';
-            const locationsBackBtn = document.getElementById('locations-back-btn');
-            if (locationsBackBtn) locationsBackBtn.style.display = 'none';
-            chooseServerBtn.style.display = 'none';
-            // اعرض شبكة المستخدمين
-            showUsersGrid();
-        };
-    }
-    chooseServerBtn.style.display = 'block';
-    chooseServerBtn.disabled = true;
-    chooseServerBtn.style.opacity = '0.6';
-
-    // عند العودة من اللوكيشنات أخفِ زر اختيار الخادم
-     locationsBackBtn = document.getElementById('locations-back-btn');
-    if (locationsBackBtn) {
-        locationsBackBtn.onclick = function() {
-            // أخفِ شبكة اللوكيشنات
-            const locationsDiv = document.getElementById('locations-grid');
-            if (locationsDiv) locationsDiv.style.display = 'none';
-            // أخفِ زر العودة الخاص باللوكيشنات
-            locationsBackBtn.style.display = 'none';
-            // أخفِ زر اختيار الخادم
-            const chooseServerBtn = document.getElementById('choose-server-btn');
-            if (chooseServerBtn) chooseServerBtn.style.display = 'none';
-            // أظهر السلة وزر العودة العلوي وزر مكان التوصيل
-            const summaryDiv = document.getElementById('selected-items-summary');
-            if (summaryDiv) summaryDiv.style.display = 'block';
-            const topBackBtn = document.getElementById('cart-back-btn-top');
-            if (topBackBtn) topBackBtn.style.display = 'block';
-            const deliveryBtn = document.getElementById('choose-delivery-location-btn');
-            if (deliveryBtn) deliveryBtn.style.display = 'block';
-        };
-    }
 
     // ضبط ألوان الكروت حسب النمط الحالي
     updateLocationsCardsTheme();
@@ -1336,6 +1267,7 @@ async function fetchHouseUsers() {
 
 // دالة لعرض كروت المستخدمين بنفس طريقة اللوكيشنات
 async function showUsersGrid() {
+    
     // أخفِ كل ما يتعلق بقائمة اللوكيشنات
     const locationsDiv = document.getElementById('locations-grid');
     if (locationsDiv) locationsDiv.style.display = 'none';
