@@ -8,7 +8,7 @@
     async function getUser(userId) {
         if (!userId) {
             return { status: 'error', message: 'لم يتم إرسال معرف المستخدم' };
-        }
+        } 
         const url = `${SUPABASE_URL}/rest/v1/users?id=eq.${encodeURIComponent(userId)}`;
         try {
             const res = await fetch(url, {

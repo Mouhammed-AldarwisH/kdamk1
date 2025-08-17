@@ -16,7 +16,7 @@ body {
     align-items: center;
     min-height: 100vh;
     background: linear-gradient(45deg, #ffd700, #ffeb3b);
-}
+} 
 
 body.dark-theme {
     background: linear-gradient(45deg, #2c2c2c, #1a1a1a);

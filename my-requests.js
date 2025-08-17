@@ -12,14 +12,15 @@ initSupabaseClient();
 
 // ترجمة حالة الطلب
 function getStatusLabel(status) { 
+    const lang = localStorage.getItem('lang') || 'ar';
     const labels = {
-        new: "جديد",
-        in_progress: "قيد التنفيذ",
-        done: "تم التنفيذ",
-        rejected: "مرفوض"
+        new: window.translations?.[lang]?.status_new || "جديد",
+        in_progress: window.translations?.[lang]?.status_in_progress || "قيد التنفيذ",
+        done: window.translations?.[lang]?.status_done || "تم التنفيذ",
+        rejected: window.translations?.[lang]?.status_rejected || "مرفوض"
     };
     return labels[status] || status;
-}
+} 
 
 // جلب الطلبات التي يكون المستخدم الحالي هو المستلم
 async function fetchReceivedRequests() {
@@ -104,8 +105,9 @@ async function renderRequests() {
         document.body.appendChild(homeBtn);
     }
 
+    const lang = localStorage.getItem('lang') || 'ar';
     const container = document.getElementById('requests-list');
-    container.innerHTML = '<div style="text-align:center; color:#888; font-size:18px;">جاري تحميل الطلبات...</div>';
+    container.innerHTML = `<div style="text-align:center; color:#888; font-size:18px;">${window.translations?.[lang]?.loadingRequests || "جاري تحميل الطلبات..."}</div>`;
     const requests = await fetchReceivedRequests();
 
     // ترتيب الطلبات: الجديد أولاً، ثم المنفذ أو المرفوض
@@ -127,7 +129,7 @@ async function renderRequests() {
     if (!pendingBtn) {
         pendingBtn = document.createElement('button');
         pendingBtn.id = 'pending-requests-btn';
-        pendingBtn.textContent = 'هناك طلبات لم تقبلها بعد!';
+        pendingBtn.textContent = window.translations?.[lang]?.pendingRequests || 'هناك طلبات لم تقبلها بعد!';
         pendingBtn.style = `
             position:fixed;
             left:50%;
@@ -162,7 +164,7 @@ async function renderRequests() {
     pendingBtn.style.display = unseen ? 'block' : 'none';
 
     if (!sortedRequests || sortedRequests.length === 0) {
-        container.innerHTML = '<div style="text-align:center; color:#888; font-size:18px;">لا توجد طلبات مستلمة.</div>';
+        container.innerHTML = `<div style="text-align:center; color:#888; font-size:18px;">${window.translations?.[lang]?.noReceivedRequests || "لا توجد طلبات مستلمة."}</div>`;
         return;
     }
     container.innerHTML = '';
@@ -207,7 +209,7 @@ async function renderRequests() {
         card.className = 'request-card';
         card.innerHTML = `
             <div class="request-header">
-                <span>من: ${req.sender?.name || 'غير معروف'}</span>
+                <span>${window.translations?.[lang]?.from || 'من'}: ${req.sender?.name || window.translations?.[lang]?.unknown || 'غير معروف'}</span>
             </div>
             <div class="request-status status-${req.status}">
                 ${getStatusLabel(req.status)}
@@ -216,15 +218,15 @@ async function renderRequests() {
             <div style="margin-bottom:6px;">
                 <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px; justify-content:flex-end;">
                     <i class="fas fa-map-marker-alt" style="color:#e53935; font-size:22px;"></i>
-                    <span style="font-size:15px; font-weight:600;">مكان التوصيل</span>
+                    <span style="font-size:15px; font-weight:600;">${window.translations?.[lang]?.deliveryLocation || "مكان التوصيل"}</span>
                 </div>
                 <div style="display:flex; align-items:center; gap:8px; justify-content:center; margin-top:12px;">
-                    <span>${req.location?.name || 'غير محدد'}</span>
+                    <span>${req.location?.name || window.translations?.[lang]?.notSpecified || 'غير محدد'}</span>
                     ${req.location?.image ? `<img src="${req.location.image}" alt="location" class="request-location-img">` : ''}
                 </div>
             </div>
             <div class="request-footer">
-                <span>تاريخ الطلب: ${new Date(req.created_at).toLocaleString('ar-EG')}</span>
+                <span>${window.translations?.[lang]?.orderDate || "تاريخ الطلب"}: ${new Date(req.created_at).toLocaleString(lang === 'ar' ? 'ar-EG' : lang === 'en' ? 'en-US' : 'fil-PH')}</span>
             </div>
         `;
 
@@ -234,7 +236,7 @@ async function renderRequests() {
             btnsDiv.style = "display:flex; gap:12px; margin-top:8px; justify-content:flex-end;";
             // زر تم التسليم
             const doneBtn = document.createElement('button');
-            doneBtn.textContent = 'تم التسليم';
+            doneBtn.textContent = window.translations?.[lang]?.delivered || 'تم التسليم';
             doneBtn.style = "background:#4caf50; color:#fff; font-weight:700; border:none; border-radius:12px; padding:8px 18px; cursor:pointer;";
             doneBtn.onclick = async function() {
                 doneBtn.disabled = true;
@@ -251,7 +253,7 @@ async function renderRequests() {
 
             // زر لا يمكنني فعله
             const rejectBtn = document.createElement('button');
-            rejectBtn.textContent = 'لا يمكنني فعله';
+            rejectBtn.textContent = window.translations?.[lang]?.cannotDo || 'لا يمكنني فعله';
             rejectBtn.style = "background:#e53935; color:#fff; font-weight:700; border:none; border-radius:12px; padding:8px 18px; cursor:pointer;";
             rejectBtn.onclick = async function() {
                 doneBtn.disabled = true;

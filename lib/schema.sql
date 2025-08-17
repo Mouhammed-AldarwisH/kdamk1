@@ -83,6 +83,20 @@ WITH CHECK (true);
 
 ALTER TABLE requests
 ADD COLUMN is_seen_by_receiver BOOLEAN NOT NULL DEFAULT FALSE;
+
+CREATE TABLE translations (
+  id SERIAL PRIMARY KEY,
+  table_name TEXT NOT NULL,       -- مثل: items, locations
+  record_id INT NOT NULL,         -- الـ id من الجدول الأصلي
+  language_code TEXT NOT NULL,    -- مثل: 'ar', 'en', 'ur', 'fil'
+  field_name TEXT NOT NULL,       -- مثل: 'name'
+  translated_text TEXT NOT NULL
+);
+ALTER TYPE item_type ADD VALUE 'leftovers';
+ALTER TYPE item_type ADD VALUE 'tasks';
+ALTER TYPE item_type ADD VALUE 'household';
+ALTER TYPE item_type ADD VALUE 'vegetables';
+ALTER TYPE item_type ADD VALUE 'fruits';
 -- 📦 Supabase Storage Explanation:
 -- A storage bucket named `public-images` was created to store public image files.
 -- This bucket contains two folders:

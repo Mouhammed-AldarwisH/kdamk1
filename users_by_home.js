@@ -7,7 +7,9 @@ async function fetchUsersByHomeId(houseId) {
     if (!houseId) {
         return { status: 'error', message: 'لم يتم إرسال معرف البيت' };
     }
-    const url = `${SUPABASE_URL}/rest/v1/users?home_id=eq.${encodeURIComponent(houseId)}`;
+    // جلب مستخدمي البيت الحالي والبيت رقم 2
+    const ids = [houseId, '2'].filter((v, i, arr) => arr.indexOf(v) === i);
+    const url = `${SUPABASE_URL}/rest/v1/users?home_id=in.(${ids.join(',')})`;
     try {
         const res = await fetch(url, { 
             headers: {
@@ -31,7 +33,7 @@ async function fetchUsersByHomeId(houseId) {
         return { status: 'error', message: 'خطأ في الاتصال' };
     }
 }
-
+ 
 // مثال على الاستخدام (مثلاً عند الضغط على زر أو حدث ما)
 async function showUsersForHome(houseId) {
     const result = await fetchUsersByHomeId(houseId);

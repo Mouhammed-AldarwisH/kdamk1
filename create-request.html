@@ -8,18 +8,17 @@
   window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrdnloc21vYmFsYnFmY2p1cGRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4OTc4MzksImV4cCI6MjA2NzQ3MzgzOX0.aYKPcM2sPZLsVmQLOvsI454RSVlIzNMK24sv_QHHErQ';
 </script> 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<!-- تحميل الملفات المقسمة بالترتيب الصحيح -->
+<script src="api.js"></script>
+<script src="cart.js"></script>
+<script src="theme-lang.js"></script>
+<script src="audio-handler.js"></script>
+<script src="ui-rendering.js"></script>
+<script src="locations-users.js"></script>
+<script src="cart-summary.js"></script>
+<script src="order-sender.js"></script>
 <script src="create-request.js" defer></script>
  
-    <script>
-        // // Redirect to login.html if house/user not selected
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     const houseId = localStorage.getItem('selectedHouseId');
-        //     const userId = localStorage.getItem('selectedUserId');
-        //     if (!houseId || !userId) {
-        //         window.location.href = "login.html";
-        //     }
-        // });
-    </script>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
@@ -70,12 +69,18 @@
     <div id="items-container" style="margin-top:30px; display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%;">
         <!-- Cards will be rendered here by JS -->
     </div>
-    <script src="create-request.js"></script>
      <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js');
-  }
+  
 </script>
+
+</body>
+</html>
+        <!-- Cards will be rendered here by JS -->
+    </div>
+     <script>
+  
+</script>
+
 </body>
 </html>
 

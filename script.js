@@ -23,7 +23,7 @@ const translations = {
         enterHouseName: "الرجاء إدخال اسم البيت",
         wrongHouseName: "اسم البيت غير صحيح",
         addHouseImages: "إضافة صور للبيت"
-    },
+    }, 
     en: { 
         confirm: "Are you sure?",
         yes: "Yes",
@@ -71,6 +71,30 @@ const translations = {
         enterHouseName: "Ilagay ang pangalan ng bahay",
         wrongHouseName: "Maling pangalan ng bahay",
         addHouseImages: "Magdagdag ng mga Larawan ng Bahay"
+    },
+    ur: {
+        confirm: "کیا آپ کو یقین ہے؟",
+        yes: "جی ہاں",
+        no: "نہیں",
+        chooseUser: "صارف منتخب کریں",
+        newRequest: "نیا آرڈر بھیجیں",
+        myRequests: "آپ کے پچھلے آرڈرز",
+        receivedRequests: "آپ کو بھیجے گئے آرڈرز",
+        logRequests: "آرڈر لاگ",
+        noUsers: "اس گھر کے لیے کوئی صارف نہیں۔",
+        fetchError: "صارفین حاصل کرنے میں خرابی",
+        userFetchError: "صارف کا ڈیٹا حاصل نہیں ہوا",
+        connectionError: "کنکشن میں خرابی",
+        hello: "خوش آمدید",
+        logout: "لاگ آؤٹ",
+        houseVerification: "گھر کی تصدیق",
+        houseName: "گھر کا نام",
+        verify: "تصدیق کریں",
+        theme: "تھیم",
+        language: "زبان",
+        enterHouseName: "براہ کرم گھر کا نام درج کریں",
+        wrongHouseName: "غلط گھر کا نام",
+        addHouseImages: "گھر کی تصاویر شامل کریں"
     }
 };
 
@@ -97,6 +121,14 @@ $(document).ready(function() {
             $('#themeButton').attr('title', translations.ph.theme || 'Tema');
             $('#langButton').attr('title', translations.ph.language || 'Wika');
             $('.overlay-content h3').text(translations.ph.chooseUser);
+        } else if (lang === 'ur') {
+            $('html').attr('dir', 'ltr');
+            $('h2').text(translations.ur.houseVerification || 'گھر کی تصدیق');
+            $('label').text(translations.ur.houseName || 'گھر کا نام');
+            $('button[type="submit"]').text(translations.ur.verify || 'تصدیق کریں');
+            $('#themeButton').attr('title', translations.ur.theme || 'تھیم');
+            $('#langButton').attr('title', translations.ur.language || 'زبان');
+            $('.overlay-content h3').text(translations.ur.chooseUser);
         } else {
             $('html').attr('dir', 'rtl');
             $('h2').text(translations.ar.houseVerification || 'التحقق من البيت');
@@ -249,6 +281,10 @@ $(document).ready(function() {
                     `;
                 }  else if (role === 'receiver_only') {
                     actionsHtml += `
+                        <button class="action-btn" id="newRequestBtn">
+                            <i class="fas fa-plus-circle" style="margin-left:8px;color:#28a745;"></i>
+                            <span>${t.newRequest}</span>
+                        </button>
                         <button class="action-btn" id="receivedRequestsBtn">
                             <i class="fas fa-inbox" style="margin-left:8px;color:#ffc107;"></i>
                             <span>${t.receivedRequests}</span>

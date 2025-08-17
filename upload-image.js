@@ -47,6 +47,13 @@ let uploadedImageUrl = null;
 document.querySelectorAll('.select-type-btn').forEach(btn => {
     btn.onclick = function() {
         selectedType = btn.dataset.type;
+        // تغيير العنوان حسب النوع
+        const uploadTitleDiv = document.querySelector('.upload-title');
+        if (selectedType === 'item') {
+            uploadTitleDiv.textContent = 'رفع غرض';
+        } else if (selectedType === 'location') {
+            uploadTitleDiv.textContent = 'رفع مكان توصيل';
+        }
         // أظهر زر السهم للرجوع
         document.getElementById('backArrowBtn').style.display = 'inline-block';
         // أخفِ زرين الاختيار
@@ -86,6 +93,8 @@ document.getElementById('backArrowBtn').onclick = function() {
         document.getElementById('itemTypeSelect').value = '';
     }
     selectedType = null;
+    // إعادة العنوان الافتراضي
+    document.querySelector('.upload-title').textContent = 'رفع صورة لغرض أو مكان توصيل';
 }
 
 // عند اختيار صورة، اعرضها في كارد ثم أظهر الحقول التالية
@@ -193,7 +202,47 @@ document.getElementById('uploadBtn').onclick = async function() {
             return;
         }
     }
+
+    // ضغط الصورة قبل الرفع
+    async function compressImage(file, quality = 0.5, maxWidth = 600) {
+        return new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = function() {
+                // ضبط الأبعاد
+                let width = img.width;
+                let height = img.height;
+                if (width > maxWidth) {
+                    height = Math.round(height * (maxWidth / width));
+                    width = maxWidth;
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                canvas.toBlob(
+                    (blob) => {
+                        if (blob) resolve(blob);
+                        else reject(new Error('فشل ضغط الصورة'));
+                    },
+                    'image/jpeg',
+                    quality
+                );
+            };
+            img.onerror = reject;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                img.src = e.target.result;
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(file);
+        });
+    }
+
     try {
+        // ضغط الصورة أولاً
+        const compressedBlob = await compressImage(file, 0.5, 600);
+
         // رفع الصورة إلى Supabase Storage
         const sanitizeFileName = (name) => name.replace(/\s+/g, '_').replace(/[^\w.]/gi, '');
         const safeFileName = sanitizeFileName(file.name);
@@ -201,7 +250,9 @@ document.getElementById('uploadBtn').onclick = async function() {
         const filePath = `${folder}/${Date.now()}_${safeFileName}`;
         const { data: uploadData, error: uploadError } = await client.storage
             .from('public-images')
-            .upload(filePath, file);
+            .upload(filePath, compressedBlob, {
+                contentType: 'image/jpeg'
+            });
         if (uploadError) throw uploadError;
         // الحصول على الرابط العام
         const { data: urlData } = client.storage
@@ -222,7 +273,12 @@ document.getElementById('uploadBtn').onclick = async function() {
             .from(table)
             .insert([insertObj]);
         if (insertError) throw insertError;
-        msgDiv.textContent = 'تم رفع الصورة وإضافة البيانات بنجاح!';
+        // تعديل رسالة النجاح حسب النوع
+        if (selectedType === 'item') {
+            msgDiv.textContent = 'تم رفع غرض بنجاح!';
+        } else {
+            msgDiv.textContent = 'تم رفع مكان توصيل بنجاح!';
+        }
         msgDiv.className = 'success-msg';
         fileInput.style.display = 'none';
         nameInput.style.display = 'none';
@@ -231,11 +287,10 @@ document.getElementById('uploadBtn').onclick = async function() {
         if (selectedType === 'item') {
             document.getElementById('itemTypeSelect').value = '';
         }
-    setTimeout(() => {
-        window.location.reload(); // إعادة تحميل الصفحة
-
-        }, 1000); //  بعد 3 ثواني إعادة تحميل الصفحة
-            } catch (err) {
+        setTimeout(() => {
+            window.location.reload(); // إعادة تحميل الصفحة
+        }, 1000); //  بعد 1 ثانية إعادة تحميل الصفحة
+    } catch (err) {
         msgDiv.textContent = 'حدث خطأ أثناء رفع الصورة.';
         msgDiv.className = 'error-msg';
         console.error(err);

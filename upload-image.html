@@ -24,7 +24,7 @@
             padding: 32px 24px;
             text-align: center;
             position: relative;
-        }
+        } 
         .upload-title {
             font-size: 22px;
             font-weight: 700;
@@ -95,6 +95,7 @@
             <div class="lang-option" data-lang="ar">العربية</div>
             <div class="lang-option" data-lang="en">English</div>
             <div class="lang-option" data-lang="ph">Filipino</div>
+            <div class="lang-option" data-lang="ur">اردو</div>
         </div>
     </div>
     <input type="hidden" id="currentLang" value="ar">
@@ -125,6 +126,11 @@
                 <option value="forks">شوك</option>
                 <option value="food">أكل</option>
                 <option value="drink">مشروبات</option>
+                <option value="leftovers">بقايا أكل</option>
+                <option value="tasks">أوامر</option>
+                <option value="household">مستلزمات البيت</option>
+                <option value="vegetables">خضروات</option>
+                <option value="fruits">فواكه</option>
             </select>
         </div>
         <div id="upload-section" style="display:none;">
@@ -176,7 +182,12 @@
             spoons: "ملاعق",
             forks: "شوك",
             food: "أكل",
-            drink: "مشروبات"
+            drink: "مشروبات",
+            leftovers: "بقايا أكل",
+            tasks: "أوامر",
+            household: "مستلزمات البيت",
+            vegetables: "خضروات",
+            fruits: "فواكه"
           }
         },
         en: {
@@ -196,7 +207,12 @@
             spoons: "Spoons",
             forks: "Forks",
             food: "Food",
-            drink: "Drinks"
+            drink: "Drinks",
+            leftovers: "Leftovers",
+            tasks: "Tasks",
+            household: "Household",
+            vegetables: "Vegetables",
+            fruits: "Fruits"
           }
         },
         ph: {
@@ -216,7 +232,12 @@
             spoons: "Kutsara",
             forks: "Tinidor",
             food: "Pagkain",
-            drink: "Inumin"
+            drink: "Inumin",
+            leftovers: "Tira-tirang pagkain",
+            tasks: "Mga Gawain",
+            household: "Mga Pangangailangan sa Bahay",
+            vegetables: "Gulay",
+            fruits: "Prutas"
           }
         }
     };
@@ -224,7 +245,17 @@
     function applyLang(lang) {
         document.getElementById('currentLang').value = lang;
         document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
-        document.querySelector('.upload-title').textContent = translations[lang]?.uploadTitle || translations.ar.uploadTitle;
+        // تحديث العنوان حسب النوع المختار
+        const uploadTitleDiv = document.querySelector('.upload-title');
+        const selectedTypeBtn = document.querySelector('.select-type-btn.selected');
+        let titleText;
+        if (selectedTypeBtn) {
+          const type = selectedTypeBtn.dataset.type;
+          titleText = translations[lang]?.[type] || translations[lang]?.uploadTitle || translations.ar.uploadTitle;
+        } else {
+          titleText = translations[lang]?.uploadTitle || translations.ar.uploadTitle;
+        }
+        uploadTitleDiv.textContent = titleText;
         document.getElementById('uploadBtn').textContent = translations[lang]?.uploadBtn || translations.ar.uploadBtn;
         document.getElementById('changeImageBtn').textContent = translations[lang]?.changeImg || translations.ar.changeImg;
         document.getElementById('nameInput').placeholder = translations[lang]?.namePlaceholder || translations.ar.namePlaceholder;
@@ -234,13 +265,23 @@
           const type = btn.dataset.type;
           btn.textContent = translations[lang]?.[type] || btn.textContent;
         });
-        // ترجمة قائمة اختيار النوع
+        // ترجمة قائمة اختيار النوع (إنشاء الخيارات ديناميكياً)
         const itemTypeSelect = document.getElementById('itemTypeSelect');
         if (itemTypeSelect) {
-          for (let i = 1; i < itemTypeSelect.options.length; i++) {
-            const key = itemTypeSelect.options[i].value;
-            itemTypeSelect.options[i].text = translations[lang]?.itemTypes?.[key] || itemTypeSelect.options[i].text;
-          }
+          // احفظ القيمة الحالية
+          const selectedValue = itemTypeSelect.value;
+          // احذف كل الخيارات ما عدا الأولى
+          while (itemTypeSelect.options.length > 1) itemTypeSelect.remove(1);
+          // أضف الخيارات من الترجمات
+          const types = ['cups', 'plates', 'spices', 'spoons', 'forks', 'food', 'drink', 'leftovers', 'tasks', 'household', 'vegetables', 'fruits'];
+          types.forEach(key => {
+            const opt = document.createElement('option');
+            opt.value = key;
+            opt.text = translations[lang]?.itemTypes?.[key] || key;
+            itemTypeSelect.appendChild(opt);
+          });
+          // أعد تعيين القيمة المختارة إذا كانت موجودة
+          itemTypeSelect.value = selectedValue;
         }
     }
 
@@ -323,6 +364,18 @@
             if (dropdown && !dropdown.contains(e.target) && e.target.id !== 'langButton') {
                 dropdown.style.display = 'none';
             }
+        });
+
+        document.querySelectorAll('.select-type-btn').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            document.querySelectorAll('.select-type-btn').forEach(b => b.classList.remove('selected'));
+            btn.classList.add('selected');
+            const lang = localStorage.getItem('lang') || 'ar';
+            // تحديث العنوان حسب النوع المختار
+            const uploadTitleDiv = document.querySelector('.upload-title');
+            const type = btn.dataset.type;
+            uploadTitleDiv.textContent = translations[lang]?.[type] || translations[lang]?.uploadTitle || translations.ar.uploadTitle;
+          });
         });
       });
     </script>

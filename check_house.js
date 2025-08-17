@@ -7,7 +7,7 @@ async function checkHouse(houseName) {
     const apiKey = window.SUPABASE_ANON_KEY;
     const url = 'https://akvyhsmobalbqfcjupdq.supabase.co/rest/v1/homes?name=eq.' + encodeURIComponent(houseName);
  
-    try { 
+    try {  
         const res = await fetch(url, {
             headers: {
                 'apikey': apiKey,
