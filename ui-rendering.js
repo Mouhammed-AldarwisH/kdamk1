@@ -80,6 +80,14 @@ async function renderRows(selectedType = '') {
                 'ثلج-يكفي-كاس': 'fa-snowflake'
             };
 
+            // ترجمة الأوامر اليدوية
+            const lang = localStorage.getItem('lang') || 'ar';
+            const manualCommands = {
+                'طلب-مجيء': window.translations?.[lang]?.manualCommands?.come || 'طلب مجيء',
+                'تنظيف': window.translations?.[lang]?.manualCommands?.clean || 'تنظيف',
+                'ارسلي-الناقص': window.translations?.[lang]?.manualCommands?.sendMissing || 'ارسلي الناقص'
+            };
+
             // تحقق من اسم العنصر إذا كان يحتاج شكل توضيحي
             let imageHtml;
             if (item.name === 'شوكه-كبيرة') {
@@ -186,11 +194,14 @@ async function renderRows(selectedType = '') {
                 `;
             }
 
+            // اسم العنصر مع الترجمة إذا كان أمر يدوي
+            let displayName = manualCommands[item.name] || item.name;
+
             card.innerHTML = `
                 <div style="height:${window.innerWidth <= 600 ? '110px' : '160px'}; margin-bottom:12px; display:flex; align-items:center; justify-content:center;">
                     ${imageHtml}
                 </div>
-                <div style="font-weight:600; font-size:18px; margin-bottom:16px;">${item.name}</div>
+                <div style="font-weight:600; font-size:18px; margin-bottom:16px;">${displayName}</div>
                 <div id="controls-${item.id}" class="item-controls">
                     ${renderItemControls(item.id, count)}
                 </div>

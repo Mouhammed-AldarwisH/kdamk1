@@ -119,18 +119,7 @@
         <div id="item-type-section" style="display:none; margin-bottom:16px;">
             <select id="itemTypeSelect" style="padding:8px 12px; border-radius:8px; font-size:16px;">
                 <option value="">-- اختر النوع --</option>
-                <option value="cups">كاسات</option>
-                <option value="plates">صحون</option>
-                <option value="spices">بهارات</option>
-                <option value="spoons">ملاعق</option>
-                <option value="forks">شوك</option>
-                <option value="food">أكل</option>
-                <option value="drink">مشروبات</option>
-                <option value="leftovers">بقايا أكل</option>
-                <option value="tasks">أوامر</option>
-                <option value="household">مستلزمات البيت</option>
-                <option value="vegetables">خضروات</option>
-                <option value="fruits">فواكه</option>
+                <!-- سيتم توليد الخيارات ديناميكياً من applyLang -->
             </select>
         </div>
         <div id="upload-section" style="display:none;">
@@ -268,20 +257,28 @@
         // ترجمة قائمة اختيار النوع (إنشاء الخيارات ديناميكياً)
         const itemTypeSelect = document.getElementById('itemTypeSelect');
         if (itemTypeSelect) {
-          // احفظ القيمة الحالية
-          const selectedValue = itemTypeSelect.value;
-          // احذف كل الخيارات ما عدا الأولى
-          while (itemTypeSelect.options.length > 1) itemTypeSelect.remove(1);
-          // أضف الخيارات من الترجمات
-          const types = ['cups', 'plates', 'spices', 'spoons', 'forks', 'food', 'drink', 'leftovers', 'tasks', 'household', 'vegetables', 'fruits'];
-          types.forEach(key => {
-            const opt = document.createElement('option');
-            opt.value = key;
-            opt.text = translations[lang]?.itemTypes?.[key] || key;
-            itemTypeSelect.appendChild(opt);
-          });
-          // أعد تعيين القيمة المختارة إذا كانت موجودة
-          itemTypeSelect.value = selectedValue;
+            // احفظ القيمة الحالية
+            const selectedValue = itemTypeSelect.value;
+            // احذف كل الخيارات
+            itemTypeSelect.innerHTML = '';
+            // أضف الخيار الأول
+            const firstOpt = document.createElement('option');
+            firstOpt.value = '';
+            firstOpt.text = translations[lang]?.selectType || translations.ar.selectType;
+            itemTypeSelect.appendChild(firstOpt);
+            // أضف الخيارات من الترجمات فقط
+            const types = [
+                'cups', 'plates', 'spices', 'spoons', 'forks', 'food', 'drink',
+                'leftovers', 'tasks', 'household', 'vegetables', 'fruits'
+            ];
+            types.forEach(key => {
+                const opt = document.createElement('option');
+                opt.value = key;
+                opt.text = translations[lang]?.itemTypes?.[key] || key;
+                itemTypeSelect.appendChild(opt);
+            });
+            // أعد تعيين القيمة المختارة إذا كانت موجودة
+            itemTypeSelect.value = selectedValue;
         }
     }
 
@@ -379,6 +376,9 @@
         });
       });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
+</body>
+</html>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/js/all.min.js"></script>
 </body>
 </html>

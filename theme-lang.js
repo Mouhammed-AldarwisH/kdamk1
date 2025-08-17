@@ -60,7 +60,12 @@ const translations = {
             fruits: "فواكه"
         },
         allTypes: "الكل",
-        audioNoteOptional: "سجل ملاحظة صوتية (اختياري)"
+        audioNoteOptional: "سجل ملاحظة صوتية (اختياري)",
+        manualCommands: {
+            come: "طلب مجيء",
+            clean: "تنظيف",
+            sendMissing: "ارسلي الناقص"
+        }
     },
     en: {
         confirmOrder: "Click to confirm order",
@@ -121,7 +126,12 @@ const translations = {
             fruits: "Fruits"
         },
         allTypes: "All",
-        audioNoteOptional: "Record an audio note (optional)"
+        audioNoteOptional: "Record an audio note (optional)",
+        manualCommands: {
+            come: "Come Request",
+            clean: "Cleaning",
+            sendMissing: "Send Missing"
+        }
     },
     ph: {
         confirmOrder: "I-click para kumpirmahin ang order",
@@ -182,7 +192,12 @@ const translations = {
             fruits: "Prutas"
         },
         allTypes: "Lahat",
-        audioNoteOptional: "Mag-record ng audio note (opsyonal)"
+        audioNoteOptional: "Mag-record ng audio note (opsyonal)",
+        manualCommands: {
+            come: "Request to Come",
+            clean: "Paglilinis",
+            sendMissing: "Ipadala ang kulang"
+        }
     },
     ur: {
         confirmOrder: "آرڈر کی تصدیق کے لیے دبائیں",
@@ -243,7 +258,12 @@ const translations = {
             fruits: "پھل"
         },
         allTypes: "سب",
-        audioNoteOptional: "آڈیو نوٹ ریکارڈ کریں (اختیاری)"
+        audioNoteOptional: "آڈیو نوٹ ریکارڈ کریں (اختیاری)",
+        manualCommands: {
+            come: "آنے کی درخواست",
+            clean: "صفائی",
+            sendMissing: "کمی بھیجیں"
+        }
     }
 };
 

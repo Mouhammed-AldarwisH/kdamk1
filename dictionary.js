@@ -575,6 +575,24 @@ const globalDictionary = {
         ph: "Mga Pangangailangan sa Bahay",
         ur: "گھر کی اشیاء"
     },
+    "طلب-مجيء": {
+        ar: "طلب مجيء",
+        en: "Call Request",
+        ph: "Request to Come",
+        ur: "آنے کی درخواست"
+    },
+    "تنظيف": {
+        ar: "تنظيف",
+        en: "Cleaning",
+        ph: "Paglilinis",
+        ur: "صفائی"
+    },
+    "ارسلي-الناقص": {
+        ar: "ارسلي الناقص",
+        en: "Send Missing",
+        ph: "Ipadala ang Kulang",
+        ur: "کمی بھیجیں"
+    },
 
     // إضافة كلمات برمجياً (أمثلة فقط، يمكنك توليد المزيد تلقائياً)
 };
