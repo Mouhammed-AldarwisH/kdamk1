@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>التحقق من البيت</title>
+     <script>
+      window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrdnloc21vYmFsYnFmY2p1cGRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4OTc4MzksImV4cCI6MjA2NzQ3MzgzOX0.aYKPcM2sPZLsVmQLOvsI454RSVlIzNMK24sv_QHHErQ';
+    </script> 
+   
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- سكريبت للتحقق من وجود مستخدم محفوظ قبل تحميل الصفحة -->
+    <script> 
+        // إخفاء قائمة المستخدمين فقط إذا كان هناك مستخدم مختار مسبقًا
+        if (localStorage.getItem('selectedUserId') && localStorage.getItem('selectedUserId') !== "none") {
+            document.addEventListener('DOMContentLoaded', function() {
+                var optionsGrid = document.querySelector('.options-grid');
+                if (optionsGrid) optionsGrid.style.display = 'none';
+            });
+        }
+    </script>
+
+    <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#000000">
+
+<link rel="apple-touch-icon" href="icon-192.png">
+
+</head>
+<body>
+    <!-- اجعل أزرار التبديل أول عنصر في الـ body ليكون فوق أي طبقة -->
+    <div class="theme-toggle" style="z-index: 1002; position: fixed; top: 10px; left: 10px;">
+        <!-- زر تبديل اللغة بدون margin -->
+        <button id="langButton">
+            <i class="fas fa-globe"></i>
+        </button>
+        <button id="themeButton">
+            <i class="fas fa-moon"></i>
+        </button>
+        <!-- قائمة منسدلة للغات -->
+        <div id="lang-dropdown" class="lang-dropdown" style="display:none;">
+            <div class="lang-option" data-lang="ar">العربية</div>
+            <div class="lang-option" data-lang="en">English</div>
+            <div class="lang-option" data-lang="ph">Filipino</div>
+            <div class="lang-option" data-lang="ur">اردو</div>
+        </div>
+    </div>
+    <!-- عنصر مخفي لتخزين اللغة الحالية -->
+    <input type="hidden" id="currentLang" value="ar">
+    <div class="login-container">
+        <form id="loginForm">
+            <h2>التحقق من البيت</h2>
+            <div class="input-group">
+                <input type="text" id="houseName" name="houseName" required>
+                <label>اسم البيت</label>
+            </div>
+            <!-- إضافة خانة الباسوورد -->
+            <div class="input-group">
+                <input type="password" id="housePassword" name="housePassword" required placeholder="كلمة المرور">
+            </div>
+            <!-- حقل honeypot مخفي لمنع البوتات -->
+            <div style="display:none;">
+                <input type="text" id="website" name="website" autocomplete="off" tabindex="-1">
+            </div>
+            <button type="submit">تحقق</button>
+            <div id="result-message" class="result-message"></div>
+        </form>
+    </div>
+    <!-- إضافة طبقة خافتة مع مربعات اختيار -->
+    <div id="overlay" class="overlay" style="display:none; z-index:1001;">
+        <div class="overlay-content">
+            <h3>اختر أحد المستخدمين</h3>
+            <div class="options-grid">
+                <!-- سيتم تعبئة أسماء المستخدمين هنا ديناميكياً -->
+            </div>
+        </div> 
+    </div>
+    <script src="check_house.js"></script>
+    <script src="users_by_home.js"></script>
+    <script src="get_user.js"></script>
+    <script src="script.js"></script>
+   
+
+</body>
+</html>
+
