@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>الرئيسية</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <script>  
+        // عند تحميل الصفحة، تحقق من حالة تسجيل الدخول
+        document.addEventListener('DOMContentLoaded', function() {
+            var houseId = localStorage.getItem('houseId');
+            if (houseId && houseId !== "none") {
+                // المستخدم مسجل دخول، أظهر overlay مباشرة
+                window.location.href = "login.html";
+            } else {
+                // المستخدم غير مسجل دخول، أرسله إلى صفحة تسجيل الدخول
+                window.location.href = "login.html";
+            }
+        }); 
+    </script>
+</head>
+<body>
+    <!-- لا يوجد محتوى، سيتم التوجيه تلقائياً -->
+

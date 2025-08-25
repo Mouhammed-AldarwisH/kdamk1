@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>تسجيل بيت جديد</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      window.SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFrdnloc21vYmFsYnFmY2p1cGRxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTE4OTc4MzksImV4cCI6MjA2NzQ3MzgzOX0.aYKPcM2sPZLsVmQLOvsI454RSVlIzNMK24sv_QHHErQ';
+    </script> 
+
+</head>
+<body>
+    <div class="login-container">
+        <form id="registerHomeForm">
+            <h2>تسجيل بيت جديد</h2>
+            <div class="input-group">
+                <input type="text" id="newHouseName" name="newHouseName" required>
+                <label>اسم البيت</label>
+            </div>
+            <div class="input-group">
+                <input type="password" id="newHousePassword" name="newHousePassword" required>
+                <label>كلمة المرور</label>
+            </div>
+            <div class="input-group">
+                <input type="text" id="newUserName" name="newUserName" required>
+                <label>اسم المستخدم</label>
+            </div>
+            <button type="submit">تسجيل</button>
+            <div id="register-result-message" class="result-message"></div>
+        </form>
+        <!-- نص تحت الفورم -->
+        <div class="register-link" style="text-align:center; margin-top:20px; font-size:15px; color:#888;">
+            <a href="login.html" style="color:#ffd700; text-decoration:underline; cursor:pointer;">لديك بيت بالفعل؟ اضغط هنا</a>
+        </div>
+    </div>
+    <script src="register-home.js"></script>
+</body>
+</html>
